@@ -7,10 +7,16 @@ export default withMermaid(
         base: "/cs-wiki/", // 不能少, url定位
         title: "CS Wiki",
         description: "Computer Science Wiki",
+        lastUpdated: true,
         themeConfig: {
             // https://vitepress.dev/reference/default-theme-config
             // 导航栏
             nav: [
+                {
+                    text: "blog",
+                    link: "/blog/blog",
+                    activeMatch: "/blog/",
+                },
                 {
                     text: "静态站",
                     link: "static-web", // 单独md文件, 不配置侧边栏
@@ -28,6 +34,19 @@ export default withMermaid(
             ],
             // 侧边栏
             sidebar: {
+                "/blog/": {
+                    base: "/blog/",
+                    items: [
+                        {
+                            text: "blog",
+                            collapsed: false,
+                            items: [
+                                { text: "生物vs计算机", link: "生物vs计算机" },
+                            ],
+                        },
+                    ],
+                },
+
                 "/java/": {
                     base: "/java/",
                     items: [
