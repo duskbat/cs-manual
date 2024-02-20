@@ -121,6 +121,7 @@ export default withMermaid(
         },
         // markdown
         markdown: {
+            // shiki 支持自定义scheme, 可参考文档. 导入: import darcula from './theme/darcula.json'
             theme: {
                 light: "github-light",
                 dark: "monokai",
