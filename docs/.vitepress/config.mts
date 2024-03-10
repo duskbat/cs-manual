@@ -58,6 +58,7 @@ export default withMermaid(
                                 { text: "java发展史", link: "java发展史" },
                                 { text: "HashMap", link: "HashMap" },
                                 { text: "Map-api", link: "Map-API" },
+                                { text: "并发", link: "并发" },
                             ],
                         },
                     ],
