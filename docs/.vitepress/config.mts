@@ -112,7 +112,9 @@ export default withMermaid(
                     ],
                 },
             },
-
+            outline: {
+                level: "deep",
+            },
             socialLinks: [
                 { icon: "github", link: "https://github.com/duskbat" },
             ],
