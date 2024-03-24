@@ -107,6 +107,7 @@ export default withMermaid(
                                     text: "多步操作最优解",
                                     link: "多步操作最优解",
                                 },
+                                { text: "图形最大面积", link: "图形最大面积" },
                             ],
                         },
                     ],
