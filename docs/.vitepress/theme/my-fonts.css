@@ -3,4 +3,12 @@
 :root {
     --vp-font-family-base: "Inter"; /* normal text font */
     --vp-font-family-mono: "Fira Code"; /* code font */
+    --vp-layout-max-width: 2048px;
+}
+.dark {
+    --vp-code-block-bg: #2b2b2b;
+    --vp-c-indigo-1: #b09d79;
+}
+.VPDoc.has-aside .content-container[data-v-7aebf3ac] {
+    max-width: 1080px;
 }
