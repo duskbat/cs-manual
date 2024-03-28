@@ -1,5 +1,6 @@
 import { defineConfig } from "vitepress";
 import { withMermaid } from "vitepress-plugin-mermaid";
+import darcula from "./theme/darcula-theme.json";
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid(
@@ -128,7 +129,7 @@ export default withMermaid(
             // shiki 支持自定义scheme, 可参考文档. 导入: import darcula from './theme/darcula.json'
             theme: {
                 light: "github-light",
-                dark: "monokai",
+                dark: darcula,
             },
             math: true,
         },
