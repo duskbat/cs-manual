@@ -472,6 +472,13 @@
             "settings": {
                 "foreground": "#b09d79"
             }
+        },
+        {
+            "scope": ["support"],
+            "settings": {
+                "fontStyle": "italic",
+                "foreground": "#CC8242"
+            }
         }
     ],
     "colors": {
