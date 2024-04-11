@@ -75,7 +75,7 @@
         },
         {
             "name": "Storage type",
-            "scope": "storage,storage.type,storage.modifier,storage.arrow",
+            "scope": "storage.type.primitive,storage.modifier,storage.arrow",
             "settings": {
                 "foreground": "#CC8242"
             }
@@ -88,14 +88,6 @@
             }
         },
         {
-            "name": "Function",
-            "scope": "support.function, entity.name.function",
-            "settings": {
-                "foreground": "#FFC66D"
-            }
-        },
-        {
-            "name": "Function Types",
             "scope": "annotation.meta.ts, annotation.meta.tsx",
             "settings": {
                 "foreground": "#CCCCCC"
@@ -392,31 +384,71 @@
         {
             "scope": "token.info-token",
             "settings": {
-                "foreground": "#6796e6"
+                "foreground": "#6796E6"
             }
         },
         {
             "scope": "token.warn-token",
             "settings": {
-                "foreground": "#cd9731"
+                "foreground": "#CD9731"
             }
         },
         {
             "scope": "token.error-token",
             "settings": {
-                "foreground": "#f44747"
+                "foreground": "#F44747"
             }
         },
         {
             "scope": "token.debug-token",
             "settings": {
-                "foreground": "#b267e6"
+                "foreground": "#B267E6"
             }
         },
         {
-            "scope": "meta.method-call entity.name.function",
+            "scope": [
+                "meta.method-call entity.name.function",
+                "meta.function-call entity.name.function",
+                "meta.function-call meta.function-call.generic",
+                "support.function.builtin"
+            ],
             "settings": {
-                "foreground": "#b09d79"
+                "foreground": "#B09D79"
+            }
+        },
+        {
+            "scope": [
+                "meta.method.body meta.definition.variable",
+                "meta.definition.variable storage.type",
+                " meta.method.body meta.definition.variable variable.other.definition"
+            ],
+            "settings": {
+                "foreground": "#CCCCCC"
+            }
+        },
+        {
+            "scope": [
+                "meta.class.body meta.definition.variable variable.other.definition"
+            ],
+            "settings": {
+                "foreground": "#9E7BB0"
+            }
+        },
+        {
+            "scope": ["meta.function.decorator entity.name.function.decorator"],
+            "settings": {
+                "foreground": "#BBB529"
+            }
+        },
+        {
+            "scope": [
+                "meta.function entity.name.function",
+                "support.function",
+                "meta.method.identifier entity.name.function",
+                "entity.name.function"
+            ],
+            "settings": {
+                "foreground": "#FFC66D"
             }
         },
         {
@@ -427,29 +459,5 @@
             }
         }
     ],
-    "colors": {
-        "editor.background": "#242424",
-        "editor.foreground": "#cccccc",
-        "editor.selectionBackground": "#204182cc",
-        "editor.lineHighlightBackground": "#ffffff0b",
-        "editor.activeLineNumber.foreground": "#cccccc",
-        "editorGutter.background": "#ffffff0b",
-        "titleBar.activeBackground": "#ffffff1a",
-        "titleBar.inactiveBackground": "#ffffff10",
-        "titleBar.activeForeground": "#cccccc",
-        "sideBar.border": "#ffffff1a",
-        "sideBar.background": "#242424",
-        "statusBar.foreground": "#cccccc",
-        "statusBar.background": "#ffffff1a",
-        "tab.activeBackground": "#ffffff1a",
-        "tab.inactiveBackground": "#ffffff0b",
-        "tab.activeBorder": "#0c7d9d",
-        "editorSuggestWidget.background": "#303030",
-        "editorSuggestWidget.highlightForeground": "#cc6e2f",
-        "editorSuggestWidget.selectedBackground": "#204182cc",
-        "badge.background": "#ffffff1a",
-        "activityBar.background": "#ffffff1a",
-        "activityBarBadge.background": "#007acc"
-    },
     "semanticHighlighting": true
 }
