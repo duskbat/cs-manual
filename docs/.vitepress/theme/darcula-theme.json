@@ -406,6 +406,7 @@
             }
         },
         {
+            "name": "方法调用",
             "scope": [
                 "meta.method-call entity.name.function",
                 "meta.function-call entity.name.function",
@@ -417,16 +418,18 @@
             }
         },
         {
+            "name": "变量",
             "scope": [
-                "meta.method.body meta.definition.variable",
                 "meta.definition.variable storage.type",
-                " meta.method.body meta.definition.variable variable.other.definition"
+                "meta.method.body meta.definition.variable",
+                "meta.method.body meta.definition.variable variable.other.definition"
             ],
             "settings": {
                 "foreground": "#CCCCCC"
             }
         },
         {
+            "name": "属性",
             "scope": [
                 "meta.class.body meta.definition.variable variable.other.definition"
             ],
@@ -435,12 +438,18 @@
             }
         },
         {
-            "scope": ["meta.function.decorator entity.name.function.decorator"],
+            "name": "注解",
+            "scope": [
+                "meta.function.decorator entity.name.function.decorator",
+                "meta.declaration.annotation punctuation.definition.annotation",
+                "meta.declaration.annotation storage.type.annotation"
+            ],
             "settings": {
                 "foreground": "#BBB529"
             }
         },
         {
+            "name": "function 声明",
             "scope": [
                 "meta.function entity.name.function",
                 "support.function",
@@ -452,9 +461,8 @@
             }
         },
         {
-            "scope": ["support"],
+            "scope": ["support.type"],
             "settings": {
-                "fontStyle": "italic",
                 "foreground": "#CC8242"
             }
         }
