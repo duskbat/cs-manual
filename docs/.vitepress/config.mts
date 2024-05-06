@@ -104,11 +104,13 @@ export default withMermaid(
                                 { text: "字符串编辑", link: "字符串编辑" },
                                 { text: "最长公共前缀", link: "最长公共前缀" },
                                 { text: "集合中的元素", link: "集合中的元素" },
+                                { text: "下一个元素", link: "下一个元素" },
                                 {
                                     text: "多步操作最优解",
                                     link: "多步操作最优解",
                                 },
                                 { text: "图形最大面积", link: "图形最大面积" },
+                                { text: "图", link: "图" },
                             ],
                         },
                     ],
@@ -129,7 +131,7 @@ export default withMermaid(
             // shiki 支持自定义scheme, 可参考文档. 导入: import darcula from './theme/darcula.json'
             theme: {
                 light: "github-light",
-                dark: darcula,
+                dark: "dark-plus", // darcula
             },
             math: true,
         },

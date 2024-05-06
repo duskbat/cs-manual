@@ -75,7 +75,7 @@
         },
         {
             "name": "Storage type",
-            "scope": "storage,storage.type,storage.modifier,storage.arrow",
+            "scope": "storage.type.primitive,storage.modifier,storage.arrow",
             "settings": {
                 "foreground": "#CC8242"
             }
@@ -88,14 +88,6 @@
             }
         },
         {
-            "name": "Function",
-            "scope": "support.function, entity.name.function",
-            "settings": {
-                "foreground": "#FFC66D"
-            }
-        },
-        {
-            "name": "Function Types",
             "scope": "annotation.meta.ts, annotation.meta.tsx",
             "settings": {
                 "foreground": "#CCCCCC"
@@ -392,111 +384,88 @@
         {
             "scope": "token.info-token",
             "settings": {
-                "foreground": "#6796e6"
+                "foreground": "#6796E6"
             }
         },
         {
             "scope": "token.warn-token",
             "settings": {
-                "foreground": "#cd9731"
+                "foreground": "#CD9731"
             }
         },
         {
             "scope": "token.error-token",
             "settings": {
-                "foreground": "#f44747"
+                "foreground": "#F44747"
             }
         },
         {
             "scope": "token.debug-token",
             "settings": {
-                "foreground": "#b267e6"
+                "foreground": "#B267E6"
             }
         },
         {
-            "name": "Python operators",
-            "scope": "keyword.operator.logical.python",
+            "name": "方法调用",
+            "scope": [
+                "meta.method-call entity.name.function",
+                "meta.function-call entity.name.function",
+                "meta.function-call meta.function-call.generic",
+                "support.function.builtin"
+            ],
             "settings": {
-                "foreground": "#CC8242"
+                "foreground": "#B09D79"
             }
         },
         {
-            "name": "Dart class type",
-            "scope": "support.class.dart",
+            "name": "变量",
+            "scope": [
+                "meta.definition.variable storage.type",
+                "meta.method.body meta.definition.variable",
+                "meta.method.body meta.definition.variable variable.other.definition"
+            ],
             "settings": {
-                "foreground": "#CC8242"
+                "foreground": "#CCCCCC"
             }
         },
         {
-            "name": "PHP variables",
-            "scope": ["variable.language.php", "variable.other.php"],
+            "name": "属性",
+            "scope": [
+                "meta.class.body meta.definition.variable variable.other.definition"
+            ],
             "settings": {
                 "foreground": "#9E7BB0"
             }
         },
         {
-            "name": "Perl specific",
-            "scope": ["variable.other.readwrite.perl"],
+            "name": "注解",
+            "scope": [
+                "meta.function.decorator entity.name.function.decorator",
+                "meta.declaration.annotation punctuation.definition.annotation",
+                "meta.declaration.annotation storage.type.annotation"
+            ],
             "settings": {
-                "foreground": "#9E7BB0"
+                "foreground": "#BBB529"
             }
         },
         {
-            "name": "PHP variables",
-            "scope": ["variable.other.property.php"],
-            "settings": {
-                "foreground": "#CC8242"
-            }
-        },
-        {
-            "name": "PHP variables",
-            "scope": ["support.variable.property.php"],
+            "name": "function 声明",
+            "scope": [
+                "meta.function entity.name.function",
+                "support.function",
+                "meta.method.identifier entity.name.function",
+                "entity.name.function"
+            ],
             "settings": {
                 "foreground": "#FFC66D"
             }
         },
         {
-            "scope": [
-                "variable.function",
-                "source meta.function-call entity.name.function",
-                "source meta.method-call entity.name.function",
-                "meta.class meta.group.braces.curly meta.function-call variable.function",
-                "meta.class meta.field.declaration meta.function-call entity.name.function",
-                "variable.function.constructor",
-                "meta.block meta.var.expr meta.function-call entity.name.function",
-                "support.function.console",
-                "meta.function-call support.function",
-                "meta.property.class variable.other.class",
-                "punctuation.definition.entity.css"
-            ],
+            "scope": ["support.type"],
             "settings": {
-                "foreground": "#b09d79"
+                "foreground": "#CC8242"
             }
         }
     ],
-    "colors": {
-        "editor.background": "#242424",
-        "editor.foreground": "#cccccc",
-        "editor.selectionBackground": "#204182cc",
-        "editor.lineHighlightBackground": "#ffffff0b",
-        "editor.activeLineNumber.foreground": "#cccccc",
-        "editorGutter.background": "#ffffff0b",
-        "titleBar.activeBackground": "#ffffff1a",
-        "titleBar.inactiveBackground": "#ffffff10",
-        "titleBar.activeForeground": "#cccccc",
-        "sideBar.border": "#ffffff1a",
-        "sideBar.background": "#242424",
-        "statusBar.foreground": "#cccccc",
-        "statusBar.background": "#ffffff1a",
-        "tab.activeBackground": "#ffffff1a",
-        "tab.inactiveBackground": "#ffffff0b",
-        "tab.activeBorder": "#0c7d9d",
-        "editorSuggestWidget.background": "#303030",
-        "editorSuggestWidget.highlightForeground": "#cc6e2f",
-        "editorSuggestWidget.selectedBackground": "#204182cc",
-        "badge.background": "#ffffff1a",
-        "activityBar.background": "#ffffff1a",
-        "activityBarBadge.background": "#007acc"
-    },
     "semanticHighlighting": true
 }

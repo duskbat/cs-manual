@@ -1,14 +1,21 @@
 @import url(https://fonts.googleapis.com/css?family=Fira+Code:regular,italic,700,700italic);
 @import url(https://fonts.googleapis.com/css?family=Inter:regular,italic,700,700italic);
+
 :root {
     --vp-font-family-base: "Inter"; /* normal text font */
     --vp-font-family-mono: "Fira Code"; /* code font */
-    --vp-layout-max-width: 1660px;
+    --vp-layout-max-width: 1660px; /*页面宽度*/
 }
+
 .dark {
-    --vp-code-block-bg: #2b2b2b;
-    --vp-c-indigo-1: #b09d79;
+    --vp-code-block-bg: #2b2b2b; /*black theme代码块背景色*/
+    --vp-c-indigo-1: #b09d79; /*黑金*/
 }
+.vp-doc blockquote {
+    color: var(--vp-c-text-2); /*控制注释的透明度*/
+}
+
+/*控制内容区宽度*/
 .VPDoc.has-aside .content-container[data-v-7aebf3ac] {
     max-width: 1080px;
 }
