@@ -72,10 +72,10 @@ export default withMermaid(
                             text: "leetcode",
                             collapsed: false,
                             items: [
+                                { text: "图", link: "图" },
                                 { text: "栈", link: "栈" },
                                 { text: "树", link: "树" },
                                 { text: "区间", link: "区间" },
-                                { text: "找数", link: "找数" },
                                 { text: "排序", link: "排序" },
                                 { text: "搜索", link: "搜索" },
                                 { text: "数组", link: "数组" },
@@ -97,20 +97,19 @@ export default withMermaid(
                                 { text: "二分查找", link: "二分查找" },
                                 { text: "拓扑排序", link: "拓扑排序" },
                                 { text: "最长子串", link: "最长子串" },
+                                { text: "下一个元素", link: "下一个元素" },
                                 { text: "二分猜答案", link: "二分猜答案" },
                                 { text: "多少种不同", link: "多少种不同" },
                                 { text: "子数组子串", link: "子数组子串" },
                                 { text: "字符串匹配", link: "字符串匹配" },
                                 { text: "字符串编辑", link: "字符串编辑" },
+                                { text: "图形最大面积", link: "图形最大面积" },
                                 { text: "最长公共前缀", link: "最长公共前缀" },
                                 { text: "集合中的元素", link: "集合中的元素" },
-                                { text: "下一个元素", link: "下一个元素" },
                                 {
                                     text: "多步操作最优解",
                                     link: "多步操作最优解",
                                 },
-                                { text: "图形最大面积", link: "图形最大面积" },
-                                { text: "图", link: "图" },
                             ],
                         },
                     ],
@@ -131,7 +130,7 @@ export default withMermaid(
             // shiki 支持自定义scheme, 可参考文档. 导入: import darcula from './theme/darcula.json'
             theme: {
                 light: "github-light",
-                dark: "dark-plus", // darcula
+                dark: darcula, // darcula
             },
             math: true,
         },
