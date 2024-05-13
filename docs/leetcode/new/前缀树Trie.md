@@ -52,3 +52,57 @@ class Trie {
     }
 }
 ```
+
+## 查字典
+
+### 648. 单词替换 mid
+
+在英语中，我们有一个叫做 词根(root) 的概念，可以词根后面添加其他一些词组成另一个较长的单词——我们称这个词为 继承词(successor)。例如，词根 an，跟随着单词 other(其他)，可以形成新的单词 another(另一个)。
+
+现在，给定一个由许多词根组成的词典 dictionary 和一个用空格分隔单词形成的句子 sentence。你需要将句子中的所有继承词用词根替换掉。如果继承词有许多可以形成它的词根，则用最短的词根替换它。
+
+你需要输出替换之后的句子。
+
+```java
+class Solution {
+
+    static class Node {
+        Node[] table = new Node[26];
+        boolean isLeaf;
+    }
+
+    // 词根树
+    private final Node root = new Node();
+
+    public String replaceWords(List<String> dictionary, String sentence) {
+        for (String s : dictionary) {
+            Node p = root;
+            for (char c : s.toCharArray()) {
+                if (p.table[c - 'a'] == null)
+                    p.table[c - 'a'] = new Node();
+                p = p.table[c - 'a'];
+            }
+            p.isLeaf = true;
+        }
+        StringBuilder sb = new StringBuilder();
+        String[] words = sentence.split(" ");
+        for (String w : words) {
+            if (!sb.isEmpty()) sb.append(" ");
+            sb.append(findRoot(w));
+        }
+        return sb.toString();
+    }
+
+    private String findRoot(String word) {
+        Node p = root;
+        int cnt = 0;
+        for (char c : word.toCharArray()) {
+            cnt++;
+            if (p.table[c - 'a'] == null) return word;
+            if (p.table[c - 'a'].isLeaf) return word.substring(0, cnt);
+            p = p.table[c - 'a'];
+        }
+        return word;
+    }
+}
+```
