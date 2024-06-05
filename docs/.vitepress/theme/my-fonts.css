@@ -4,6 +4,7 @@
 :root {
     --vp-font-family-base: "Inter"; /* normal text font */
     --vp-font-family-mono: "Fira Code"; /* code font */
+    --vp-code-font-size: 15px;
     --vp-layout-max-width: 1660px; /*页面宽度*/
 }
 
