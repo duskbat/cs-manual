@@ -60,6 +60,7 @@ export default withMermaid(
                                 { text: "HashMap", link: "HashMap" },
                                 { text: "Map-api", link: "Map-API" },
                                 { text: "并发", link: "并发" },
+                                { text: "JVM", link: "JVM" },
                             ],
                         },
                     ],
