@@ -8,10 +8,6 @@
 
 #### SDS
 
-预分配冗余空间以减少内存的频繁分配。小于 1M 直接加倍，超过 1M 加 1M，字符串最大 512M 字节。
-
-> 注意, 分配的空间不是 SDS 的容量 capacity, 而是 malloc 的空间
-
 为什么用 SDS, C 语言中的字符串标准形式以 NULL 作为结束符, 获取长度的函数 strlen 的时间复杂度是 O(n), 单线程的 redis 难以承受
 
 ```c
@@ -25,16 +21,21 @@ struct SDS<T> {
 
 > 泛型可以在字符串较短的时候使用 byte 和 short
 
-创建的时候 len == capacity, 通常我们使用 append 命令
+创建的时候 len == capacity, 通常不使用 append 命令
+
+预分配冗余空间以减少内存的频繁分配。小于 1M 直接加倍，超过 1M 加 1M，字符串最大 512M 字节。
+
+> 注意, 分配的空间是分配给 SDS 的空间
 
 #### 存储格式 emb 和 raw
 
--   encoding: embstr malloc 一次
--   encoding: raw malloc 两次
+-   encoding: embstr alloc 一次
+-   encoding: raw alloc 两次
 
 先说结论: <=44 字节 用 embstr, 超过 44 用 raw
 
-对象头 RedisObject 大小为 16B, SDS 结构最小为 3B, SDS.content 以 \\0 结尾, malloc 分配内存通常 32B 或 64B, 64-16-3-1 = 44
+对象头 RedisObject 大小为 16B, SDS 结构最小为 3B, SDS.content 以 \\0 结尾, alloc 分配内存通常 32B 或 64B.  
+64-16-3-1 = 44
 
 #### 命令
 
