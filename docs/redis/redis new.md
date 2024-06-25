@@ -11,19 +11,20 @@
 为什么用 SDS, C 语言中的字符串标准形式以 NULL 作为结束符, 获取长度的函数 strlen 的时间复杂度是 O(n), 单线程的 redis 难以承受
 
 ```c
-struct SDS<T> {
-    T capacity; // 容量
-    T len;      // 长度
-    byte flags; // 特殊标识
-    byte[] content; // 数组内容
-}
+struct __attribute__ ((__packed__)) sdshdr8 {
+    uint8_t len;
+    uint8_t alloc;
+    unsigned char flags;
+    char buf[];
+};
 ```
 
 > 泛型可以在字符串较短的时候使用 byte 和 short
 
-创建的时候 len == capacity, 通常不使用 append 命令
+创建的时候 len == alloc, 通常不使用 append 命令
 
-预分配冗余空间以减少内存的频繁分配。小于 1M 直接加倍，超过 1M 加 1M，字符串最大 512M 字节。
+预分配冗余空间以减少内存的频繁分配。  
+扩容时, 小于 1M 直接加倍，超过 1M 加 1M，字符串最大 512M 字节。
 
 > 注意, 分配的空间是分配给 SDS 的空间
 
