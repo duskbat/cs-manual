@@ -2,40 +2,6 @@
 
 ## 数据结构
 
-### 1 String
-
-如果 <=44 字节 使用 embstr; 否则 raw
-
-> 为什么是 44?
-
-```c
-// 伪代码
-struct sdsshdr {
-  int len;
-  int free;
-  char[] buf;
-}
-
-string 长度
-键值对
-先验新增
-批量键值对
-过期和多久过期
-计数
-```
-
-bitmap:
-setbit mykey {offset} {value(1/0)}
-
-### 5 zset(sorted set)
-
-有 value 有 score
-跳跃列表 以一定概率(官方晋升率 25%)选择代表形成上一层(最高 32 层), 最底层是双向链表, 上层都是单向链表
-
-zrank 通过 forward 指针中的跨度 span 累加计算得到
-
----
-
 ### 布隆过滤器
 
 用一个 BitMap, 使用 n 个不同的散列函数将一个元素映射到 n 个位点上  

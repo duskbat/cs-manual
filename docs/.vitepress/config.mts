@@ -11,7 +11,7 @@ export default withMermaid(
         lastUpdated: true,
         themeConfig: {
             // https://vitepress.dev/reference/default-theme-config
-            // 导航栏
+            // 顶导
             nav: [
                 {
                     text: "blog",
@@ -31,6 +31,10 @@ export default withMermaid(
                     text: "Java",
                     link: "/java/java目录",
                     activeMatch: "/java/",
+                },
+                {
+                    text: "Redis",
+                    link: "/redis/redis new", // 单独md文件, 不配置侧边栏
                 },
             ],
             // 侧边栏
