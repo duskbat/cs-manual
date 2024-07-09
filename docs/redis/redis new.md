@@ -136,3 +136,9 @@ zrank 通过 forward 指针中的跨度 span 累加计算得到
 2. drop if no elements
 
 ---
+
+## Redis 为什么快
+
+I/O 多路复用  
+https://www.xiaolincoding.com/os/8_network_system/selete_poll_epoll.html#i-o-%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8
+https://nullwy.me/2023/07/io-multiplexing-network-server/
