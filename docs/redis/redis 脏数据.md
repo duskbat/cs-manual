@@ -8,11 +8,6 @@ Redis Memcached
 | redis | 5 种 | 支持 | 原生支持 | 惰性删除+定期删除 |
 | memcached | 1 种 | 不支持 | 原生不支持 | 惰性删除 |
 
--   redis 支持的数据类型更丰富
--   redis 支持数据持久化, 可以保存在硬盘, 重启的时候能再次加载
--   memcached 没有原生的集群模式, redis 原生支持集群
--   memcached 过期只用惰性删除, redis 支持惰性删除和定期删除
-
 ### 文件-事件处理器
 
 Redis 基于 Reactor 模式开发了自己的网络事件处理器：这个处理器被称为文件事件处理器（file event handler）。
