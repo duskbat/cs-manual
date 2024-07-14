@@ -51,26 +51,6 @@ incrby 会溢出，溢出策略可以选择
 
 > $2^{14}$个桶，每个桶 6 bits, 共 $2^{14} * 6 ÷ 8 = 12k (byte)$
 
-## 布隆过滤器
-
-Redis 4.0 提供插件功能后, 作为插件, Jedis 提供了 JReBloom 包
-| command | |
-| ---------- | ------------------------------------ |
-| bf.add | key val |
-| bf.exists | key val |
-| bf.reserve | key error_rate=0.01 initial_size=100 |
-
-根据元素数量 n 和 误判率 f 可以得出 bits 长度 l 和 hash 函数个数 k
-
-$k = 0.7 * \frac{l}{n}$
-
-$f = 0.6185 ^ {\frac{l}{n}}$
-
--   空间比(l/n)=8，f≈2%
--   f=10% 空间比 ≈5
--   f=1% 空间比 ≈10
--   f=0.1% 空间比 ≈15
-
 ## 简单限流
 
 可以用 zset 维护 range, val score 都用毫秒时间戳
@@ -331,11 +311,6 @@ redis-cli info replication | grep backlog
 redis-cli info stats | grep sync
 ```
 
-## 过期策略
-
-有一个独立的字典存放设置了过期的 key, 每秒 10 次扫描, 每次随机选 20 个, 过期的删除, 如果过期占比超过 25%, 再选 20 个; 为防止卡顿, 每次扫描不超过 25ms
-从库是被动删除, 执行从主库同步过来的 del 指令
-
 ## LRU
 
 **过期集**
@@ -389,10 +364,6 @@ lazyfree-lazy-server-del rename
 # 从库接收完rdb后立即flush
 slave-lazy-flush
 ```
-
-## Jedis
-
-主要是从连接池中获取到 Jedis 对象之后要放回去释放资源
 
 ## 保护 Redis
 
