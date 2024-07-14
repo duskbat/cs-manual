@@ -381,6 +381,75 @@ redis 不可用导致缓存击穿，DB 也会被打爆
 
 ## Redis 为什么快
 
-I/O 多路复用  
-https://www.xiaolincoding.com/os/8_network_system/selete_poll_epoll.html#i-o-%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8
-https://nullwy.me/2023/07/io-multiplexing-network-server/
+### 基于内存
+
+-   内存 ns 级别;
+-   硬盘 寻址时间 ms 级别;
+
+总线标准通常两种(消费级): SATA PCIe  
+SSD 的规格协议通常两种(消费级): AHCI NVMe (与上文对应
+
+### 单线程
+
+没有上下文切换  
+4.0 版本在**异步删除大对象**加入了多线程  
+6.0 为了提高**网络 IO 读写性能**(性能瓶颈在内存和网络,而不是 CPU,这是不使用多线程的主要原因)
+
+### 高效的数据结构
+
+### Reactor 模式的事件处理模型
+
+Reactor 模式的事件处理模型, 单线程循环事件和 IO 多路复用
+
+#### 文件-事件处理器
+
+Redis 基于 Reactor 模式开发了自己的网络事件处理器：这个处理器被称为文件事件处理器（file event handler）。
+
+Redis 采用 epoll 来实现 I/O 多路复用，同时监听多个 Socket, 当被监听的 Socket 准备好执行连接应答（accept）、读取（read）、写入（write）、关闭（close）等操作时, 就会产生与操作相对应的文件事件.  
+连接信息和事件会进到队列，依次放入 EventDispatcher，这时 EventDispatcher 就会调用 Socket 关联的 EventProcesser 来处理这些事件。
+
+虽然文件事件处理器以单线程方式运行，但通过使用 I/O 多路复用程序来监听多个 Socket，文件事件处理器既实现了高性能的网络通信模型，又可以很好地与 Redis 服务器中其他同样以单线程方式运行的模块进行对接，保持了 Redis 内部单线程设计的简单性。
+
+#### I/O 模型历史演进
+
+从 Socket 谈起, Socket 是网络通信的常用方式. 创建 Socket 时, 可以指定网络层用 IPv4 还是 IPv6, 传输层用 TCP 还是 UDP;
+
+`socket() -> bind() -> listen() -> accept()`  
+创建 Socket -> 绑定自己的 IP 和端口 -> 监听 -> 阻塞等待连接
+
+**历史时期 多线程模型**:  
+服务器的主进程负责监听客户的连接，一旦与客户端连接完成，accept() 函数就会返回一个「已连接 Socket」，这时就通过 fork() 函数创建一个子进程，实际上就把父进程所有相关的东西都复制一份，包括文件描述符、内存地址空间、程序计数器、执行的代码等。  
+进化: 使用线程, 当服务器与客户端 TCP 完成连接后，通过 pthread_create() 函数创建线程，然后将「已连接 Socket」的文件描述符传递给线程函数，接着在线程里和客户端进行通信，从而达到并发处理的目的。
+
+**历史时期 多路复用**:  
+select 实现多路复用的方式是，将已连接的 Socket 都放到一个文件描述符集合，然后调用 select() 函数将文件描述符集合拷贝到内核里，让内核来检查是否有网络事件产生. 检查的方式很粗暴，就是通过遍历文件描述符集合的方式.  
+当检查到有事件产生后，将此 Socket 标记为可读或可写，接着再把整个文件描述符集合拷贝回用户态里，然后用户态还需要再通过遍历的方法找到可读或可写的 Socket，然后再对其处理。
+
+poll 的优化点在于用动态数组存放文件描述符集合, 区别不大
+
+**epoll**:  
+先用 epoll_create 创建一个 epoll 对象 epfd，再通过 epoll_ctl 将需要监视的 socket 添加到 epfd 中，最后调用 epoll_wait 等待数据。
+
+```c
+int s = socket(AF_INET, SOCK_STREAM, 0);
+bind(s, ...);
+listen(s, ...)
+
+int epfd = epoll_create(...);
+epoll_ctl(epfd, ...); //将所有需要监听的socket添加到epfd中
+
+while(1) {
+    int n = epoll_wait(...);
+    for(接收到数据的socket){
+        //处理
+    }
+}
+```
+
+1. epoll 在内核里使用「红黑树」来关注进程所有待检测的 Socket，通过对这棵黑红树的管理，不需要像 select/poll 在每次操作时都传入整个 Socket 集合，减少了内核和用户空间大量的数据拷贝和内存分配。
+2. epoll 使用事件驱动的机制，内核里维护了一个「链表」来记录就绪事件，只将有事件发生的 Socket 集合传递给应用程序，不需要像 select/poll 那样轮询扫描整个集合（包含有和无事件的 Socket），大大提高了检测的效率。
+
+参考:
+
+-   https://www.xiaolincoding.com/os/8_network_system/selete_poll_epoll.html#%E6%9C%80%E5%9F%BA%E6%9C%AC%E7%9A%84-socket-%E6%A8%A1%E5%9E%8B
+-   https://nullwy.me/2023/07/io-multiplexing-network-server/
