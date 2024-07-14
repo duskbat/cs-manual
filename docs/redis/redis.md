@@ -378,3 +378,9 @@ redis 不可用导致缓存击穿，DB 也会被打爆
 
 3. Write Behind Caching Pattern（异步缓存写入）
    跟读写穿透类似, 不同点是异步批量更新 DB. 类似于操作系统刷写磁盘操作
+
+## Redis 为什么快
+
+I/O 多路复用  
+https://www.xiaolincoding.com/os/8_network_system/selete_poll_epoll.html#i-o-%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8
+https://nullwy.me/2023/07/io-multiplexing-network-server/
