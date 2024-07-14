@@ -34,7 +34,7 @@ export default withMermaid(
                 },
                 {
                     text: "Redis",
-                    link: "/redis/redis new", // 单独md文件, 不配置侧边栏
+                    link: "/redis/redis", // 单独md文件, 不配置侧边栏
                 },
             ],
             // 侧边栏
