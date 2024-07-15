@@ -245,6 +245,30 @@ $f = 0.6185 ^ {\frac{l}{n}}$
 
 ## GeoHash
 
+## 内存淘汰
+
+**过期集**
+
+1. volatile-lru（least recently used）：从已设置过期时间的数据集（server.db[i].expires）中挑选最早使用的数据淘汰
+2. volatile-ttl：从已设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰
+3. volatile-random：从已设置过期时间的数据集（server.db[i].expires）中任意选择数据淘汰
+
+**全集**
+
+4. allkeys-lru（least recently used）：当内存不足以容纳新写入数据时，在键空间中，移除最近最早使用的 key（这个是最常用的）
+5. allkeys-random：从数据集（server.db[i].dict）中任意选择数据淘汰
+
+**禁止**
+
+6. no-eviction：禁止驱逐数据，也就是说当内存不足以容纳新写入数据时，新写入操作会报错。
+
+**4.0 版本后增加以下两种**：
+
+1. volatile-lfu（least frequently used）：从已设置过期时间的数据集(server.db[i].expires)中挑选最不经常使用的数据淘汰
+2. allkeys-lfu（least frequently used）：当内存不足以容纳新写入数据时，在键空间中，移除最不经常使用的 key
+
+---
+
 ## 持久化
 
 ## 集群
