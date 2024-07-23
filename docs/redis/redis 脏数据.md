@@ -8,27 +8,6 @@ Redis Memcached
 | redis | 5 种 | 支持 | 原生支持 | 惰性删除+定期删除 |
 | memcached | 1 种 | 不支持 | 原生不支持 | 惰性删除 |
 
-### 持久化
-
-通常是从节点进行持久化，从节点作为备份节点，没有客户端请求的压力
-
-1. 快照持久化（snapshotting，RDB）
-   默认方式, 通过创建快照,获取数据某个时间点的副本, 可以复制到从服务器或者留存到本地 //通过 COW 的方式
-   一段时间内超过一定数量的 key 发生变化，会创建快照
-   Redis.conf
-    ```
-    save 900 1           #在900秒(15分钟)之后，如果至少有1个key发生变化，Redis就会自动触发BGSAVE命令创建快照。
-    save 300 10          #在300秒(5分钟)之后，如果至少有10个key发生变化，Redis就会自动触发BGSAVE命令创建快照。
-    save 60 10000        #在60秒(1分钟)之后，如果至少有10000个key发生变化，Redis就会自动触发BGSAVE命令创建快照。
-    ```
-2. 只追加文件（append-only file, AOF）
-   开启 AOF 后执行的每一条更改命令, redis 都会将该命令写入硬盘里的 AOF 文件. AOF 文件和 RDB 文件位置相同, 都是通过 dir 参数设置的, 默认的文件名是 append only.aof
-   **fsync**: 控制刷写硬盘
-   appendfsync everysec #每秒执行一次 fsync 操作
-   appendfsync always #每次有数据修改发生时都会写入 AOF 文件,这样会严重降低 Redis 的速度. 能保证完整性
-   appendfsync no #让操作系统决定何时进行同步 交给内核
-3. redis 4.0 开始支持 RDB 和 AOF 的混合持久化(默认关闭, 可通过配置项 aof-use-rdb-preamble 开启)
-
 ### redis 序列化反序列化
 
 org.springframework.data.redis.serializer.RedisSerializer
