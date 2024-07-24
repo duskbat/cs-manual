@@ -1,26 +1,5 @@
 ## 3. Redis
 
-### 分布式缓存技术选型
-
-Redis Memcached  
-| 缓存 | 数据类型 | 持久化 | 集群 | 过期策略 |
-| --------- | -------- | ------ | ---------- | ----------------- |
-| redis | 5 种 | 支持 | 原生支持 | 惰性删除+定期删除 |
-| memcached | 1 种 | 不支持 | 原生不支持 | 惰性删除 |
-
-### redis 序列化反序列化
-
-org.springframework.data.redis.serializer.RedisSerializer
-对于 json 而言, jackson 是官方实现 fastjson 也有相应实现
-
-### redis 事务
-
-Redis 可以通过 **MULTI，EXEC，DISCARD** 和 **WATCH** 等命令来实现事务功能。
-DISCARD 丢弃 MULTI 到 DISCARD 之间的所有指令, 必须在 EXEC 之前使用.
-WATCH 必须先于 MULTI 使用. 乐观锁的方式, 盯住一些变量, 在执行的时候检查是否被修改, 如果被修改返回错误, 客户端处理(通常是重试)
-redis 事务不支持 rollback, 所以不满足原子性.
-可以理解为是多个命令顺序打包执行, 且执行过程不会被中断(即便前面执行失败也会继续执行后续指令).
-
 ### 分布式解决方案
 
 CAP 中 AP 满足
