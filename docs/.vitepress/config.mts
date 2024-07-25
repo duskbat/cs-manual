@@ -135,7 +135,7 @@ export default withMermaid(
             // shiki 支持自定义scheme, 可参考文档. 导入: import darcula from './theme/darcula.json'
             theme: {
                 light: "github-light",
-                dark: darcula, // darcula
+                dark: "dark-plus", // darcula
             },
             math: true,
         },

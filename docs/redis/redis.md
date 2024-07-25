@@ -280,7 +280,7 @@ $f = 0.6185 ^ {\frac{l}{n}}$
 
 redis.conf
 
-```sh
+```ssh-config
 save 900 1           #在900秒(15分钟)之后，如果至少有1个key发生变化，Redis就会自动触发BGSAVE命令创建快照。
 save 300 10          #在300秒(5分钟)之后，如果至少有10个key发生变化，Redis就会自动触发BGSAVE命令创建快照。
 save 60 10000        #在60秒(1分钟)之后，如果至少有10000个key发生变化，Redis就会自动触发BGSAVE命令创建快照。
@@ -297,7 +297,7 @@ bgsave: fork 子线程执行(default)
 
 刷盘频率:
 
-```sh
+```ssh-config
 appendfsync everysec  #每秒执行一次fsync操作 默认
 appendfsync always    #每次有数据修改发生时都会写入AOF文件,这样会严重降低Redis的速度. 能保证完整性
 appendfsync no        #让操作系统决定何时进行同步 交给内核
@@ -342,7 +342,7 @@ redis 事务不支持 rollback, 所以不满足原子性.
 
 修改配置文件 redis.conf
 
-```sh
+```ssh-config
 io-threads-do-reads yes
 io-threads 4 #官网建议4核的机器建议设置为2或3个线程，8核的建议设置为6个线程
 ```
@@ -382,7 +382,8 @@ CAP 中 Redis 满足 AP
 #### Wait 指令
 
 ```sh
-wait N t # 等待 t 毫秒, 同步到至少 N 个从节点
+# 等待 t 毫秒, 同步到至少 N 个从节点
+wait N t
 ```
 
 ### 哨兵
@@ -665,10 +666,17 @@ Redis Memcached
 ### 排行榜
 
 ```sh
-ZRANGE key 0 -1 #从小到大排序
-ZREVRANGE #从大到小排序
-ZREVRANK key element #特定元素排名
-ZSCORE key element #特定元素分数
+# 从小到大排序
+ZRANGE key 0 -1
+
+# 从大到小排序
+ZREVRANGE
+
+# 特定元素排名
+ZREVRANK key element
+
+# 特定元素分数
+ZSCORE key element
 ```
 
 ### 抽奖
@@ -676,8 +684,11 @@ ZSCORE key element #特定元素分数
 SET
 
 ```sh
-SPOP key count #随机移除并获取指定集合中一个或多个元素，适合不允许重复中奖的场景
-SRANDMEMBER key count #随机获取指定集合中指定数量的元素，适合允许重复中奖的场景
+# 随机移除并获取指定集合中一个或多个元素，适合不允许重复中奖的场景
+SPOP key count
+
+# 随机获取指定集合中指定数量的元素，适合允许重复中奖的场景
+SRANDMEMBER key count
 ```
 
 ### 活跃用户统计
