@@ -23,3 +23,10 @@
 .VPDoc.has-aside .content-container[data-v-83243a5a] {
     max-width: 1080px;
 }
+
+.content[data-v-7aebf3ac] {
+    min-width: 1080px;
+}
+.content[data-v-83243a5a] {
+    min-width: 1080px;
+}
