@@ -36,6 +36,10 @@ export default withMermaid(
                     text: "Redis",
                     link: "/redis/redis", // 单独md文件, 不配置侧边栏
                 },
+                {
+                    text: "Tomcat",
+                    link: "Tomcat",
+                },
             ],
             // 侧边栏
             sidebar: {
