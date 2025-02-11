@@ -3,7 +3,7 @@
 layout: home
 
 hero:
-    name: "CS Wiki"
+    name: "CS Manual"
     text: "Computer Science"
     tagline: 想学啊你, 我教你啊
     actions:
