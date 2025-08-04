@@ -133,3 +133,10 @@ information_schema 库的 innodb_trx 表中查询长事务
 表锁的语法是 `lock tables … read/write`。在没有更细粒度的锁时，表锁是常用的处理并发的方式。
 
 DML 的读锁之间不互斥，写锁是独占的。写锁很危险，容易阻塞。通常要先检查长事务。
+
+MariaDB 已经支持了类似 try 的语法，`NOWAIT` 或 `WAIT N`
+
+```sql
+ALTER TABLE tbl_name NOWAIT add column ...
+ALTER TABLE tbl_name WAIT N add column ...
+```
