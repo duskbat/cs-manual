@@ -1,5 +1,6 @@
 import { defineConfig } from "vitepress";
 import { withMermaid } from "vitepress-plugin-mermaid";
+import { configureDiagramsPlugin } from "vitepress-plugin-diagrams";
 import darcula from "./theme/darcula-theme.json";
 
 // https://vitepress.dev/reference/site-config
@@ -138,6 +139,18 @@ export default withMermaid(
         dark: "dark-plus", // darcula
       },
       math: true,
+      config: async (md) => {
+        configureDiagramsPlugin(md, {
+          diagramsDir: "docs/public/diagrams", // 可选：自定义 SVG 文件目录
+          publicPath: "diagrams", // 可选：自定义公共路径
+          krokiServerUrl: "https://kroki.io", // 可选：自定义 Kroki 服务器地址
+          excludedDiagramTypes: ["mermaid"], // 可选：排除特定图表类型
+        });
+      },
+    },
+    // 插件
+    vite: {
+      plugins: [],
     },
   })
 );

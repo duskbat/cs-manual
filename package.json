@@ -1,14 +1,15 @@
 {
   "devDependencies": {
-    "markdown-it-mathjax3": "^4.3.2",
-    "mermaid": "^10.8.0",
-    "vitepress": "1.0.0-rc.42",
-    "vitepress-plugin-mermaid": "^2.0.16",
     "@braintree/sanitize-url": "^7.1.1",
     "cytoscape": "^3.31.0",
     "cytoscape-cose-bilkent": "^4.1.0",
     "dayjs": "^1.11.13",
-    "debug": "^4.4.0"
+    "debug": "^4.4.0",
+    "markdown-it-mathjax3": "^4.3.2",
+    "mermaid": "^10.8.0",
+    "vitepress": "1.0.0-rc.42",
+    "vitepress-plugin-diagrams": "^1.1.2",
+    "vitepress-plugin-mermaid": "^2.0.16"
   },
   "scripts": {
     "docs:dev": "vitepress dev docs",

@@ -29,6 +29,9 @@ devDependencies:
   vitepress:
     specifier: 1.0.0-rc.42
     version: 1.0.0-rc.42(@algolia/client-search@4.22.1)(markdown-it-mathjax3@4.3.2)(search-insights@2.13.0)
+  vitepress-plugin-diagrams:
+    specifier: ^1.1.2
+    version: 1.1.2(vite@5.1.3)(vitepress@1.0.0-rc.42)
   vitepress-plugin-mermaid:
     specifier: ^2.0.16
     version: 2.0.16(mermaid@10.8.0)(vitepress@1.0.0-rc.42)
@@ -853,6 +856,10 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /argparse@2.0.1:
+    resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
+    dev: true
+
   /boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
     dev: true
@@ -882,6 +889,11 @@ packages:
       parse5: 6.0.1
       parse5-htmlparser2-tree-adapter: 6.0.1
       tslib: 2.6.2
+    dev: true
+
+  /commander@14.0.2:
+    resolution: {integrity: sha512-TywoWNNRbhoD0BXs1P3ZEScW8W5iKrnbithIl0YH+uCmBd0QpPOA8yc82DS3BIE5Ma6FnBVUsJ7wVUDz4dvOWQ==}
+    engines: {node: '>=20'}
     dev: true
 
   /commander@6.2.1:
@@ -1454,6 +1466,12 @@ packages:
     dev: true
     optional: true
 
+  /linkify-it@5.0.0:
+    resolution: {integrity: sha512-5aHCbzQRADcdP+ATqnDuhhJ/MRIqDkZX5pyjFHRRysS8vZ5AbqGEoFIb6pYHPZ+L/OC2Lc+xT8uHVVR5CAK/wQ==}
+    dependencies:
+      uc.micro: 2.1.0
+    dev: true
+
   /lodash-es@4.17.21:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: true
@@ -1476,6 +1494,18 @@ packages:
       mathjax-full: 3.2.2
     transitivePeerDependencies:
       - encoding
+    dev: true
+
+  /markdown-it@14.1.0:
+    resolution: {integrity: sha512-a54IwgWPaeBCAAsv13YgmALOF1elABB08FxO9i+r4VFk5Vl4pKokRPeX8u5TCgSsPi6ec1otfLjdOpVcgbpshg==}
+    hasBin: true
+    dependencies:
+      argparse: 2.0.1
+      entities: 4.5.0
+      linkify-it: 5.0.0
+      mdurl: 2.0.0
+      punycode.js: 2.3.1
+      uc.micro: 2.1.0
     dev: true
 
   /mathjax-full@3.2.2:
@@ -1510,6 +1540,10 @@ packages:
     resolution: {integrity: sha512-V4Zn/ncyN1QNSqSBxTrMOLpjr+IKdHl2v3KVLoWmDPscP4r9GcCi71gjgvUV1SFSKh92AjAG4peFuBl2/YgCJg==}
     dependencies:
       '@types/mdast': 3.0.15
+    dev: true
+
+  /mdurl@2.0.0:
+    resolution: {integrity: sha512-Lf+9+2r+Tdp5wXDXC4PcIBjTDtq4UKjCPMQhKIuzpJNW0b96kVqSwW0bT7FhRSfmAiFYgP+SCRvdrDozfh0U5w==}
     dev: true
 
   /mensch@0.3.4:
@@ -1807,6 +1841,11 @@ packages:
     resolution: {integrity: sha512-OPELkDmSVbKjbFqF9tgvOowiiQ9TmsJljIzXRyNE8nGiis94pwv1siF78rQkAP1Q1738Ce6pellRg/Ns/CtHqQ==}
     dev: true
 
+  /punycode.js@2.3.1:
+    resolution: {integrity: sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA==}
+    engines: {node: '>=6'}
+    dev: true
+
   /rfdc@1.3.1:
     resolution: {integrity: sha512-r5a3l5HzYlIC68TpmYKlxWjmOP6wiPJ1vWv2HeLhNsRZMrCkxeqxiHlQ21oXmQ4F3SiryXBHhAD7JZqvOJjFmg==}
     dev: true
@@ -1912,6 +1951,10 @@ packages:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
     dev: true
 
+  /uc.micro@2.1.0:
+    resolution: {integrity: sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==}
+    dev: true
+
   /unist-util-stringify-position@3.0.3:
     resolution: {integrity: sha512-k5GzIBZ/QatR8N5X2y+drfpWG8IDBzdnVj6OInRNWm1oXrzydiaAT2OQiA8DPRRZyAKb9b6I2a6PxYklZD0gKg==}
     dependencies:
@@ -1972,6 +2015,19 @@ packages:
       rollup: 4.12.0
     optionalDependencies:
       fsevents: 2.3.3
+    dev: true
+
+  /vitepress-plugin-diagrams@1.1.2(vite@5.1.3)(vitepress@1.0.0-rc.42):
+    resolution: {integrity: sha512-9HlMdGDxmcU9/f/mGyXFG4oZ2tjvXXqbLW8tRMLyzR1bTYwVyp+6r4kgkdnaCkVSN7blDya06QG+KArRSZPBKg==}
+    hasBin: true
+    peerDependencies:
+      vite: '>= 4.0.0'
+      vitepress: '>= 1.0.0'
+    dependencies:
+      commander: 14.0.2
+      markdown-it: 14.1.0
+      vite: 5.1.3
+      vitepress: 1.0.0-rc.42(@algolia/client-search@4.22.1)(markdown-it-mathjax3@4.3.2)(search-insights@2.13.0)
     dev: true
 
   /vitepress-plugin-mermaid@2.0.16(mermaid@10.8.0)(vitepress@1.0.0-rc.42):
