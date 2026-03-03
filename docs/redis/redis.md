@@ -10,8 +10,32 @@ outline: [2, 3]
 * redis
 ** 概述
 *** 起源
-*** 语言
+**** 意大利老哥 Salvatore Sanfilippo 编写并开源。\nRedis 火了之后，创始人先是加入了 VMware，然后加入了 Redis Lab。\nPS：或许这可能是开源作者比较好的路了。
+*** C语言
+
 ** 基础数据结构
+*** string
+**** 内部编码
+***** int：有符号64位整数
+***** embstr：<=44字节，不可变
+***** raw：>44字节
+*** list
+**** 内部编码
+***** listpack：之前是ziplist
+***** quicklist
+*** hash
+**** 内部编码
+***** listpack
+***** hashtable
+*** set
+**** 内部编码
+***** intset
+***** listpack
+***** hashtable
+*** zset
+**** 内部编码
+***** listpack
+***** skiplist
 
 ** 妙用
 *** 分布式锁
@@ -23,12 +47,15 @@ outline: [2, 3]
 *** GeoHash
 *** Scan
 
+** Key管理
 ** 线程IO
 ** 序列化协议
 ** 持久化
+*** RDB
+*** AOF
 ** 过期策略
 ** 管道(Pipeline)
-** 事物
+** 事务
 
 ** 功能：生产-消费模型
 
@@ -52,6 +79,11 @@ outline: [2, 3]
 ```
 
 ## 基础数据结构
+
+```sh
+# 查询key的内部编码
+object encoding key
+```
 
 ### string
 
@@ -222,11 +254,24 @@ watch dog 会起一个定时任务(基于时间轮), 默认超时时间 30s, 每
 需要 lua 保证原子性
 
 ```lua
-# delifequals
-if redis.call("get",KEYS[1]) == ARGV[1] then
-return redis.call("del",KEYS[1])
+if redis.call('set', KEYS[1], ARGV[1], 'EX', ARGV[2], 'NX') then
+    return 1
+elseif redis.call('get', KEYS[1]) == ARGV[1] then
+    if redis.call('expire', KEYS[1], ARGV[2]) then
+        return 2
+    else
+        return 3
+    end
 else
-return 0
+    return 10
+end
+```
+
+```lua
+if redis.call('get', KEYS[1]) == ARGV[1] then
+    return redis.call('del', KEYS[1])
+else
+    return 0
 end
 ```
 
