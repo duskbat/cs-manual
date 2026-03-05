@@ -143,7 +143,7 @@ info memory 指令可以看用的啥
 xadd
 Stream 有一个消息链表, 所有加入的消息都串起来, 每个消息都有一个唯一 id 和对应的内容
 每个 Stream 可以挂多个消费组 Group, 每个 Group 都有一个游标 last_delivered_id, Group 需要指令 xgroup create 创建, 并且指定一个消息的 id
-每个消费者组可以挂多个消费者, 竞争消费. 消费者内有一个 PEL, 保存被客户端读取但没有 ack 的消息 id, 防止消息丢失
+每个消费组可以挂多个消费者, 竞争消费. 消费者内有一个 PEL, 保存被客户端读取但没有 ack 的消息 id, 防止消息丢失
 
 ## Info 指令
 

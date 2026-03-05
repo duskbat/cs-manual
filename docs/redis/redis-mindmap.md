@@ -1,4 +1,3 @@
-
 ```plantuml
 
 @startmindmap
@@ -39,8 +38,6 @@
 
 *** bitmap
 
-*** HyperLogLog
-**** 原理：根据N个数字的前导0个数，估算数量
 
 *** 布隆过滤器
 **** 原理：通过N个hash函数将key映射到X个bit位
@@ -52,6 +49,10 @@
 ***** Hash函数的数量
 ***** bit位长度
 
+
+
+*** HyperLogLog
+**** 原理：根据N个数字的前导0个数，估算数量
 
 *** GeoHash
 **** 原理：使用二刀法不断4分，生成二进制编码
@@ -68,7 +69,9 @@
 ****** 消费者重连后丢消息
 ****** 不会持久化
 **** stream
-
+***** list结构
+***** 消费组 group，组内消费者竞争消费
+***** 消费者ack确认
 
 ** 线程IO模型
 *** 非阻塞IO
@@ -87,18 +90,6 @@
 **** 刷盘时机
 *** 混合持久化：RDB+AOF
 
-
-** 管道(Pipeline)
-*** 一条指令发生了什么：write操作写buffer马上返回，read操作要等待网络响应写到buffer中
-*** 客户端通过改变指令的读写顺序，减少多个read操作等待网络响应的时间。
-
-** 事务与脚本
-*** 事务
-**** 命令：multi/exec/discard
-**** 原子性：只有隔离性
-**** watch：乐观锁，先watch，然后multi，如果有变化会执行失败。
-*** lua
-
 ** Key管理
 *** 字典的结构：一个大 HashMap
 *** 扩容
@@ -107,16 +98,29 @@
 *** Scan命令：每次会按匹配要求遍历N个槽
 **** 遍历顺序与扩容一样
 
+*** 过期
+**** 定期扫描
+**** 惰性删除
 
 ** 内存管理
 *** 内存分配算法
 **** jemalloc（facebook）
 **** tcmalloc（google）
 **** libc
+*** 内存淘汰策略
+**** noeviction：不写
+**** volatile-lru：设置过期时间的最久没用的
+**** volatile-ttl：设置过期时间的剩余寿命最短的
+**** volatile-random：设置过期时间的随机
+**** allkeys-lru：所有的最久没用的
+**** allkeys-random：所有的随机
 
-*** 过期策略
-
-
+** 事务与脚本
+*** 事务
+**** 命令：multi/exec/discard
+**** 原子性：只有隔离性
+**** watch：乐观锁，先watch，然后multi，如果有变化会执行失败。
+*** lua
 
 ** 集群与高可用
 *** 一致性
@@ -142,18 +146,49 @@
 ***** 命令不支持，比如事务
 ***** 强依赖协调者
 
-*** 原生集群
+*** Cluster集群
+**** 概述：原生集群，slot分片，gossip协议
+**** 数据分片
+***** 16384个槽位
+***** CRC16哈希算法
+***** 槽位分配
+**** 通信协议
+***** Gossip协议
+**** 集群拓扑
+***** 主节点
+***** 从节点
+***** 故障转移
+**** 客户端路由
+***** Moved重定向
+***** Ask重定向
 
-** 运维
-*** 大 Key
-**** bigkeys 命令
-*** Info
+** 管道(Pipeline)
+*** 一条指令发生了什么：write操作写buffer马上返回，read操作要等待网络响应写到buffer中
+*** 客户端通过改变指令的读写顺序，减少多个read操作等待网络响应的时间。
+
+
+** Redis Stack
+*** RedisJSON
+*** RediSearch
+*** RedisTimeSeries
+*** RedisBloom
 
 ** 客户端
 *** java
 **** jedis
 **** Redisson
 **** Lettuce
+
+** 运维
+*** 大 Key
+**** bigkeys 命令
+*** Info
+
+** 安全
+*** 指令安全
+*** 端口安全
+*** Lua指令权限
+*** SSL 代理
 
 @endmindmap
 
