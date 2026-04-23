@@ -1,6 +1,8 @@
 # 突击 MySQL
 
-## MySQL 基础架构
+## 一条SQL是怎样执行的？
+
+### MySQL 基础架构
 
 > 一条 SQL 是怎样执行的？可以先从 MySQL 架构谈起。
 
@@ -15,7 +17,7 @@ flowchart LR
     d --> 存储引擎
 ```
 
-### 连接器
+#### 连接器
 
 连接器负责跟客户端建立连接、获取权限、维持和管理连接。
 
@@ -44,43 +46,51 @@ show processlist;
 
 建立的连接可以分为长连接和短连接，长连接可以避免建立连接的开销，但随着执行，连接会持有很多对象占用大量内存造成 OOM, 解决这个问题有 2 种方案，一种是可以定期断开连接；另一种是 5.7 及以上版本可以通过命令`mysql_reset_connection`初始化连接资源。
 
-### 缓存
+#### 缓存
 
 MySQL 8.0 就没有了。  
 只要对表有修改，所有缓存都会失效。所以只有那些静态表适合用缓存，MySQL 支持显式指定哪个 sql 使用缓存。
 
-### 分析器
+#### 分析器
 
 分析器做词法分析和语法分析
 
 - 词法分析，识别关键词
 - 语法分析，语法校验
 
-### 优化器
+#### 优化器
 
 生成执行计划，选择索引，决定执行顺序等
 
-### 执行器
+#### 执行器
 
 调用存储引擎的接口，汇总结果集  
 慢查询日志中的 rows_examined 字段，就是执行器调用引擎获取到的累加行数。
 
-## 写操作
+### 写操作
 
 要说写操作是怎样工作的，不得不提到 2 个 log，redo log 和 binlog
 
-redo log 是 InnoDB 存储引擎的东西，它是环形的日志文件，会记录**数据页的变更**，也就是物理日志。  
-binlog 是 Server 层实现的，是可追加的逻辑日志。
+#### redo log
 
-redo log 就是 WAL(Write-Ahead-Logging)里的 log。具体而言，就是先写 redo log，并更新内存，这时就算更新完成了，之后会刷写磁盘页。刷写频率由 `innodb_flush_log_at_trx_commit` 参数控制。  
+redo log 是 InnoDB 存储引擎的东西，它是环形的日志文件，会记录**数据页的变更**，也就是物理日志。
+
+redo log 就是 WAL(Write-Ahead-Logging)里的 log。具体而言，就是先写 redo log，并更新内存，这时就算更新完成了，之后会刷写磁盘页。  
 写入 redo log 时有 write pos(写入位置) 和 checkpoint(清除位置)，如果 write pos 追上 checkpoint，就要刷写磁盘，向前推动 checkpoint。
 
-sync_binlog 参数控制 binlog 持久化频率。
+#### binlog
 
-### 二阶段提交
+binlog 是 Server 层实现的，是可追加的逻辑日志。
+
+#### 二阶段提交
 
 二阶段提交指的是 redo log 的 2 种状态，写入 redo log 后，就是 prepare 状态，然后写 binlog，然后提交事务，redo log 变为 commit 状态。  
 如果写完 binlog 后宕机，事务未提交，这时会检查 binlog 是否完整，如果完整就提交事务，否则回滚。
+
+#### log 持久化控制
+
+刷写频率由 `innodb_flush_log_at_trx_commit` 参数控制。  
+sync_binlog 参数控制 binlog 持久化频率。
 
 ## 事务
 
