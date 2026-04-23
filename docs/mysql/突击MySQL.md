@@ -1,8 +1,8 @@
-# 彻底解决 MySQL
+# 突击 MySQL
 
 ## MySQL 基础架构
 
-> 一条 SQL 是怎样执行的？就可以从 MySQL 架构谈起。
+> 一条 SQL 是怎样执行的？可以先从 MySQL 架构谈起。
 
 ```mermaid
 flowchart LR
@@ -12,7 +12,7 @@ flowchart LR
     subgraph 存储引擎
     引擎
     end
-    Server --> 存储引擎
+    d --> 存储引擎
 ```
 
 ### 连接器
@@ -58,7 +58,7 @@ MySQL 8.0 就没有了。
 
 ### 优化器
 
-生成执行计划，选择索引，决定执行顺序 等
+生成执行计划，选择索引，决定执行顺序等
 
 ### 执行器
 
@@ -69,7 +69,7 @@ MySQL 8.0 就没有了。
 
 要说写操作是怎样工作的，不得不提到 2 个 log，redo log 和 binlog
 
-redo log 是 InnoDB 存储引擎的东西，它是环形的日志文件，会记录数据页的变更，也就是物理日志。  
+redo log 是 InnoDB 存储引擎的东西，它是环形的日志文件，会记录**数据页的变更**，也就是物理日志。  
 binlog 是 Server 层实现的，是可追加的逻辑日志。
 
 redo log 就是 WAL(Write-Ahead-Logging)里的 log。具体而言，就是先写 redo log，并更新内存，这时就算更新完成了，之后会刷写磁盘页。刷写频率由 `innodb_flush_log_at_trx_commit` 参数控制。  
@@ -79,8 +79,8 @@ sync_binlog 参数控制 binlog 持久化频率。
 
 ### 二阶段提交
 
-redo log 有 2 种状态，写入 redo log 后，先是 prepare 状态，然后写 binlog，然后提交事务 redo log 置为 commit 状态。  
-如果写完 binlog 后宕机，事务未提交，这时或检查 binlog 是否完整，如果完整就提交事务，否则回滚。
+二阶段提交指的是 redo log 的 2 种状态，写入 redo log 后，就是 prepare 状态，然后写 binlog，然后提交事务，redo log 变为 commit 状态。  
+如果写完 binlog 后宕机，事务未提交，这时会检查 binlog 是否完整，如果完整就提交事务，否则回滚。
 
 ## 事务
 
