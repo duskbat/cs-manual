@@ -69,7 +69,7 @@ MySQL 8.0 就没有了。
 
 ### 写操作
 
-要说写操作是怎样工作的，不得不提到 2 个 log，redo log 和 binlog
+要说写操作是怎样工作的，不得不提到 2 个 log，redo log 和 binlog.
 
 #### redo log
 
