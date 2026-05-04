@@ -26,13 +26,13 @@ SHOW ENGINE INNODB MUTEX;
 
 按锁粒度可分为:
 
--   行锁
-    -   共享锁(S Lock): 允许事务读一行数据; 可以与其他 S 锁兼容。
-    -   排他锁(X Lock): 允许事务更新或删除一条数据; 不与其他行锁兼容。
--   表锁
--   意向锁
-    -   意向共享锁(IS Lock): 事务想要获得一张表中某几行的共享锁
-    -   意向排他锁(IX Lock): 事务想要获得一张表中某几行的排他锁
+- 行锁
+  - 共享锁(S Lock): 允许事务读一行数据; 可以与其他 S 锁兼容。
+  - 排他锁(X Lock): 允许事务更新或删除一条数据; 不与其他行锁兼容。
+- 表锁
+- 意向锁
+  - 意向共享锁(IS Lock): 事务想要获得一张表中某几行的共享锁
+  - 意向排他锁(IX Lock): 事务想要获得一张表中某几行的排他锁
 
 **意向锁**  
 InnoDB 支持多粒度(granular)锁定, 允许事务在行级和表级上的锁同时存在。  
@@ -61,9 +61,9 @@ SHOW ENGINE INNODB STATUS \G;
 
 从 InnoDB 1.0 之后，通过 INFORMATION SCHEMA 中的三张表可以更好地监控当前事务, 并分析可能存在的锁问题:
 
--   INNODB_TRX
--   INNODB_LOCKS
--   INNODB_LOCK_WAITS
+- INNODB_TRX
+- INNODB_LOCKS
+- INNODB_LOCK_WAITS
 
 ## 一致性读
 
@@ -72,17 +72,17 @@ SHOW ENGINE INNODB STATUS \G;
 这种读取方式通过读取 undo 的快照数据，避免了加锁操作，同样也不需要等待锁的释放。  
 在 read committed 和 repeatable read 隔离级别下，都是使用一致性非锁定读，但是对于版本的定义是不同的。
 
--   read committed: 读取被锁定行的最新版本 (其实是违反了 I 隔离性)
--   repeatable read：读取事务开始时的版本
+- read committed: 读取被锁定行的最新版本 (其实是违反了 I 隔离性)
+- repeatable read：读取事务开始时的版本
 
 **一致性锁定读**  
 除了非锁定读外，可以显式地对数据库读取操作进行加锁。  
 InnoDB 对 SELECT 语句支持两种一致性锁定读操作：
 
--   SELECT ... FOR UPDATE
-    > 加Ｘ锁
--   SELECT ... LOCK IN SHARE MODE
-    > 加Ｓ锁
+- SELECT ... FOR UPDATE
+  > 加Ｘ锁
+- SELECT ... LOCK IN SHARE MODE
+  > 加Ｓ锁
 
 使用以上两种锁定语句的时候必须保证在一个事务中进行，事务的提交会释放锁。
 
@@ -90,9 +90,9 @@ InnoDB 对 SELECT 语句支持两种一致性锁定读操作：
 
 InnoDB 有三种行锁的算法
 
--   Record Lock: 单个行记录上锁，锁住索引记录
--   Gap Lock: 间隙锁
--   Next-Key Lock: Record Lock + Gap Lock
+- Record Lock: 单个行记录上锁，锁住索引记录
+- Gap Lock: 间隙锁
+- Next-Key Lock: Record Lock + Gap Lock
 
 Next-Key Locking 是为了解决幻影行的问题。这里注意，在 repeatable read 隔离级别下非锁定读也解决了幻行的问题。因为 MVCC 中 SELECT 会查找行版本号早于当前事务版本号的数据行，INSERT 会赋予新插入的行以当前事务版本号作为行版本号。
 
@@ -106,8 +106,8 @@ Next-Key Locking 是为了解决幻影行的问题。这里注意，在 repeatab
 
 Gap Lock 可以通过两种方式显式关闭：
 
--   read committed 隔离级别
--   参数 innodb_locks_unsafe_for_binlog 设为 1
+- read committed 隔离级别
+- 参数 innodb_locks_unsafe_for_binlog 设为 1
 
 这样除了唯一性检查之外(还有外键)就没有其他的 Gap Lock 了。  
 关闭 Gap Lock 会破坏事务的隔离性，并且可能会导致主从数据不一致。此外，性能上也没有优势。  
@@ -155,8 +155,8 @@ InnoDB 中，参数 innodb_lock_wait_timeout 控制等待时间(默认 50s), inn
 最简单的解决方案是根据等待时间超时回滚，这本质上是根据 FIFO 顺序进行回滚，如果超时的事务操作很重，更新了很多行，占用了很多的 undo log, 这种方式可能就是很不恰当了。  
 因此，数据库普遍采用等待图(wait for graph)进行死锁检测。等待图需要保存两种信息：
 
--   锁的信息链表
--   事务等待链表
+- 锁的信息链表
+- 事务等待链表
 
 链表都是有先后顺序的，事务间的等待会画出一条边，如果等待图有环，那么就存在死锁。
 
