@@ -60,6 +60,9 @@
 **** Isolation隔离性
 **** Durability持久性
 *** 隔离级别
+**** 查看
+***** MySQL 8.0 之前：SELECT @@tx_isolation;
+***** MySQL 8.0 及之后：SELECT @@transaction_isolation;
 **** READ UNCOMMITTED(读未提交)
 **** READ COMMITTED(读已提交)
 **** REPEATABLE READ(可重复读-默认)
