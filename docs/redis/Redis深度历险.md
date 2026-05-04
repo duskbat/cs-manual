@@ -1,5 +1,93 @@
 # Redis 深度历险
 
+## 基础数据结构
+
+### string
+
+| command |                     |
+| ------- | ------------------- |
+| set     | key val             |
+| get     | key                 |
+| exists  | key                 |
+| del     | key                 |
+| mget    | key1 key2           |
+| mset    | key1 val1 key2 val2 |
+| expire  | key sec             |
+| setex   | key sec val         |
+| setnx   | key val             |
+| incr    | key                 |
+| incrby  | key num             |
+
+### list
+
+| command |                    |
+| ------- | ------------------ |
+| rpush   | key val1 val2 val3 |
+| llen    | key                |
+| lpop    | key                |
+| rpop    | key                |
+| lindex  | key idx            |
+| lrange  | key l_idx r_idx    |
+| ltrim   | key l_idx r_idx    |
+
+### hash
+
+| command |                             |
+| ------- | --------------------------- |
+| hset    | key hkey hval               |
+| hgetall | key                         |
+| hlen    | key                         |
+| hget    | key hkey                    |
+| hmset   | key hkey1 hval1 hkey2 hval2 |
+| hincrby | key hkey num                |
+
+### set
+
+| command   |               |
+| --------- | ------------- |
+| sadd      | key val       |
+| sadd      | key val1 val2 |
+| smembers  | key           |
+| sismember | key val       |
+| scard     | key #size()   |
+| spop      | key           |
+
+### zset
+
+value+score 也是用 Hash 结构存储的
+
+| command       |                                |
+| ------------- | ------------------------------ |
+| zadd          | key score val                  |
+| zrange        | key l_idx r_idx                |
+| zrevrange     | key l_idx r_idx                |
+| zcard         | key                            |
+| zscore        | key val                        |
+| zrank         | key val                        |
+| zrangebyscore | key l_score r_score            |
+| zrangebyscore | key l_score r_score withscores |
+| zrem          | key val                        |
+
+---
+
+## 分布式锁
+
+- **过期问题**
+  2.8 版本后， nx 和 ex 可以同时使用
+- **释放别人的锁问题**
+  Lua 匹配随机数
+- **可重入**
+  ThreadLocal 存储计数
+  > 非必要操作
+- **加锁失败**
+  - 抛出异常
+  - 重试
+  - 异步处理
+
+**集群环境不一致**
+RedLock 向多个没有主从关系的 Redis 实例发送加锁, 过半成功则认为加锁成功
+如果不是非常在乎高可用, 就别用
+
 ## 延时队列
 
 **消息队列**  
@@ -51,6 +139,26 @@ incrby 会溢出，溢出策略可以选择
 
 > $2^{14}$个桶，每个桶 6 bits, 共 $2^{14} * 6 ÷ 8 = 12k (byte)$
 
+## 布隆过滤器
+
+Redis 4.0 提供插件功能后, 作为插件, Jedis 提供了 JReBloom 包
+| command | |
+| ---------- | ------------------------------------ |
+| bf.add | key val |
+| bf.exists | key val |
+| bf.reserve | key error_rate=0.01 initial_size=100 |
+
+根据元素数量 n 和 误判率 f 可以得出 bits 长度 l 和 hash 函数个数 k
+
+$k = 0.7 * \frac{l}{n}$
+
+$f = 0.6185 ^ {\frac{l}{n}}$
+
+- 空间比(l/n)=8，f≈2%
+- f=10% 空间比 ≈5
+- f=1% 空间比 ≈10
+- f=0.1% 空间比 ≈15
+
 ## 简单限流
 
 可以用 zset 维护 range, val score 都用毫秒时间戳
@@ -94,10 +202,9 @@ Redis-Cell 漏斗算法
 ## Scan
 
 代替 keys
-
-| command |                                 |                                                                           |
-| ------- | ------------------------------- | ------------------------------------------------------------------------- |
-| scan    | 0 match key_prefix\* count 1000 | 0=cursor 光标 <br> key_prefix\*=pattern <br> 1000=字典槽数量,不是返回条数 |
+| command | | |
+| ------- | ------------------------------ | ----------------------------------------------------------------------- |
+| scan | 0 match key_prefix\* count 1000 | 0=cursor 光标 <br> key_prefix\*=pattern <br> 1000=字典槽数量,不是返回条数 |
 
 所有的 key 都放在一个大 HashMap 里面
 
@@ -108,6 +215,65 @@ scan 顺序和扩容配合
 
 ---
 
+## 线程 IO 模型
+
+select 系列的事件轮询 + 非阻塞 IO
+
+- **非阻塞 IO**
+  socket 对象上提供的选项，Non_Blocking
+
+- **事件轮询**
+  操作系统提供给用户程序的 API select, 输入是读写描述符列表(每个客户端 socket 都有对应的读写描述符) 轮询获取事件进行处理
+
+  > 现在操作系统改用 epoll 了
+
+- **指令队列**
+  每个客户端 socket 都关联一个指令队列
+
+- **响应队列**
+  每个客户端 socket 都关联一个响应队列，如果队列为空，不输入客户端描述符 write_fds，防止线程空转
+
+- **定时任务**
+  维护最小堆，堆顶是最快要执行的任务，从此刻到堆顶任务执行的时间内，没有其他任务要处理
+
+## 通信协议
+
+redis serialization protocol
+5 种最小单元类型，单元结束时加上 \r\n
+
+| 类型       | 形式       | 样例                               |
+| ---------- | ---------- | ---------------------------------- |
+| 单行字符串 | 以 + 开头  | +hello world\r\n                   |
+| 多行字符串 | 以 $ 开头  | $11\r\nhello world\r\n             |
+| 整数       | 以 : 开头  | :1024\r\n                          |
+| 错误消息   | 以 - 开头  | -WRONGTYPE Operation against a key |
+| 数组       | 以 \* 开头 | \*3\r\n:1\r\n:2\r\n:3\r\n          |
+| NULL       | 多行字符串 | $-1\r\n                            |
+| 空串       | 多行字符串 | $0\r\n\r\n                         |
+
+## 持久化
+
+**快照**
+二进制序列化形式
+单线程进行 文件 IO 不能多路复用, 还要不阻塞; 这怎么办呢?
+使用了操作系统的 多进程 COW:
+调用 glibc 的函数 fork 出一个子进程, 持久化交给子进程处理
+并发问题使用 OS 的 COW 机制进行数据段中页面的分离, 数据段由很多操作系统的页面(4K 大小)组合而成, 当父进程修改一个页面的时候, 会复制一个副本然后对这个副本进行修改;
+而 fork 出来的子进程对冷数据快照进行持久化.
+
+**AOF**
+客户端指令会先存到日志, 然后再执行
+**优化: AOF 重写**
+bgrewriteaof 指令, 开辟一个子进程, 对内存遍历, 转换成操作指令, 序列化到一个新的 AOF 文件中, 序列化完毕后再将操作期间发生的增量 AOF 日志追加到文件中
+
+glibc 的 fsync 函数可以强制刷盘
+刷盘周期可以配置, 1s / 让 OS 决定 / 每个指令都刷
+
+**运维**
+同步操作通常比较耗费资源, 所以通常使用从节点进行持久化, 这时就要考虑网络分区的问题, 如果网络分区发生了, 主节点又挂了, 那数据有丢失风险; 最好冗余一个从节点
+
+Redis 4.0 混合持久化
+
 ## 管道
 
 redis 的管道(Pipline)是客户端提供的
@@ -115,6 +281,11 @@ redis 的管道(Pipline)是客户端提供的
 管道本质上是改变指令的读写顺序, 提升并行度, 减少网络开销
 
 > 读写之前都有 buffer, OS 将 buffer 中的数据发送/读取
+
+## 事务
+
+watch -> muti -> exec/discard
+watch 算是一种乐观锁
 
 ## PubSub
 
@@ -138,12 +309,94 @@ redis 的管道(Pipline)是客户端提供的
 
 info memory 指令可以看用的啥
 
+## 主从同步
+
+**指令同步 + 快照同步**
+
+**指令同步**
+同步 buffer 中的指令, 并告诉主库同步到哪里了; 如果网络分区发生, 主库的环状 buffer 有可能被覆盖, 这时就要用快照同步;
+
+**快照同步**
+主库进行一次 bgsave, 全部持久化, 然后将文件发送给从库, 加载完后再进行增量同步;
+如果 buffer 太小或者同步时间过长, 就无法进行增量复制, 又会触发快照同步, 有可能死循环;
+buffer 务必大一点;
+
+**无盘同步**
+有盘同步太慢了, 而且会阻塞 fsync, Redis 2.8.18 开始有了无盘同步, 通过 socket 将序列化内容发给从库
+
+**wait 指令**
+
+- wait N t
+  等待 wait 指令之前的所有写操作同步到 N 个节点, 最多等待 t 秒; t=0 是永远等待;
+
+---
+
+## Sentinel
+
+哨兵集群, 自动切换主从
+哨兵集群由 3-5 个节点组成
+
+客户端从哨兵获取主节点
+
+配置:
+
+```sh
+# 至少由一个从节点正常复制, 否则停止对外写服务
+min-slaves-to-write 1
+# 如果 10s 没有反馈, 说明从节点不正常
+min-slaves-max-lag 10
+```
+
+## Codis
+
+以后再说
+
+## Cluster
+
+Redis 集群至少分为 3 个节点, 所有数据划分为 16384 个槽位, 槽位信息会存在每个节点中, 但是每个节点只负责一部分槽位
+客户端连接集群的时候也会得到槽位配置信息, 可以根据槽位定位到目标节点
+
+配置信息会持久化到配置文件, 配置文件要确保可写
+
+**槽定位算法**
+key 会使用 crc32 算法进行 hash, 得到一个整数值, 然后对 16384 MOD 确定槽位
+
+key 还可以挂一个 tag, 来使用 tag 的槽位
+
+如果客户端访问到了错误的节点, 会返回一个 "-MOVED slot_id ip" 形式的结果, 告诉客户端访问错误
+
+**迁移**
+
+redis-trib 可以手动调整槽位, 迁移的单位是槽
+这个槽在原节点的状态为 migrating, 在目标节点的状态为 importing, 是中间态
+
+- 迁移过程:
+  从源节点获取 key => 存到目标节点 => 从源节点删除
+
+- 请求流量在迁移过程中的变化:
+  客户端请求源节点 => 源节点返回/返回重定向-ASK => asking 指令请求目标节点 => 重新请求目标节点
+  因为在迁移过程中目标节点是不认的, 会返回-MOVED, 这样会造成死循环, asking 指令就是命令目标节点处理
+
+**网络抖动**
+cluster-node-timeout 主从切换的 timeout 阈值
+
+**节点下线**
+在去中心化的 Redis Cluster 中, 一个节点认为某个节点失联, 不能说明它失联, 集群会有协商的过程, 只有大多数节点认为某个节点失联, 集群才会进行主从切换
+
+节点采用 Gossip 协议广播自己的状态和自己对集群状态的认知, 如果一个节点发现某一个节点失联(PFail), 会将这条信息向整个集群广播; 如果一个节点收到某个节点失联的通知超过半数, 就会标记该节点已经下线(Fail), 然后通知整个集群宣布该节点下线, 并立即进行主从切换
+
+**感知集群变更**
+如果目标节点挂掉, 客户端会 ConnectionError 并随机挑选一个节点重试, 会收到 -moded, 随即更新客户端配置
+如果当前节点被移出了集群, 客户端会收到 ClusterDown, 这时客户端会关闭所有连接, 清空槽位映射表; 下一条指令过来时, 会重新尝试初始化集群信息
+
+---
+
 ## Stream
 
 xadd
 Stream 有一个消息链表, 所有加入的消息都串起来, 每个消息都有一个唯一 id 和对应的内容
 每个 Stream 可以挂多个消费组 Group, 每个 Group 都有一个游标 last_delivered_id, Group 需要指令 xgroup create 创建, 并且指定一个消息的 id
-每个消费组可以挂多个消费者, 竞争消费. 消费者内有一个 PEL, 保存被客户端读取但没有 ack 的消息 id, 防止消息丢失
+每个消费者组可以挂多个消费者, 竞争消费. 消费者内有一个 PEL, 保存被客户端读取但没有 ack 的消息 id, 防止消息丢失
 
 ## Info 指令
 
@@ -166,6 +419,44 @@ redis-cli info replication | grep backlog
 redis-cli info stats | grep sync
 ```
 
+## 过期策略
+
+有一个独立的字典存放设置了过期的 key, 每秒 10 次扫描, 每次随机选 20 个, 过期的删除, 如果过期占比超过 25%, 再选 20 个; 为防止卡顿, 每次扫描不超过 25ms
+从库是被动删除, 执行从主库同步过来的 del 指令
+
+## LRU
+
+**过期集**
+
+- volatile-lru（least recently used）
+  从已设置过期时间的数据集（server.db[i].expires）中挑选最早访问的数据淘汰
+- volatile-ttl
+  从已设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰
+- volatile-random
+  从已设置过期时间的数据集（server.db[i].expires）中任意选择数据淘汰
+
+**全集**
+
+- allkeys-lru（least recently used）
+  当内存不足以容纳新写入数据时，在键空间中，移除最早访问的 key（这个是最常用的）
+- allkeys-random
+  从数据集（server.db[i].dict）中任意选择数据淘汰
+
+**禁止**
+
+- noeviction
+  禁止驱逐数据，也就是说当内存不足以容纳新写入数据时，新写入操作会报错, 只能 get 和 del。
+
+**4.0 版本后增加以下两种**：
+
+1. volatile-lfu（least frequently used）：从已设置过期时间的数据集(server.db[i].expires)中挑选最不经常使用的数据淘汰
+2. allkeys-lfu（least frequently used）：当内存不足以容纳新写入数据时，在键空间中，移除最不经常使用的 key
+
+**LRU 实现**
+真实的 lru 消耗空间比较大
+Redis 里面的 lru 是近似 lru, 每个 key 上加一个时间戳, 当空间不足时, 随机选 5(可配置) 个, 淘汰掉最旧的, 直到空间可用
+Redis 3.0 还增加了淘汰池, 新采样出来的加入池子, 再找出最早的
+
 ## 惰性删除
 
 Redis 4.0, 大 key UNLINK
@@ -186,6 +477,10 @@ lazyfree-lazy-server-del rename
 # 从库接收完rdb后立即flush
 slave-lazy-flush
 ```
+
+## Jedis
+
+主要是从连接池中获取到 Jedis 对象之后要放回去释放资源
 
 ## 保护 Redis
 
