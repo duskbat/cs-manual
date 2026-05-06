@@ -9,7 +9,8 @@
     "mermaid": "^10.8.0",
     "vitepress": "1.0.0-rc.42",
     "vitepress-plugin-diagrams": "^1.1.2",
-    "vitepress-plugin-mermaid": "^2.0.16"
+    "vitepress-plugin-mermaid": "^2.0.16",
+    "vitepress-sidebar": "^1.33.2"
   },
   "scripts": {
     "docs:dev": "vitepress dev docs",
