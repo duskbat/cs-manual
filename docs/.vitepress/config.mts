@@ -183,10 +183,6 @@ const vitePressConfig = defineConfig({
     },
   },
 
-  // Vite 配置（可扩展）
-  vite: {
-    plugins: [],
-  },
 });
 
 // 使用 withMermaid 包装以支持 Mermaid 图表
