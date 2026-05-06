@@ -1,18 +1,53 @@
 import { defineConfig } from "vitepress";
 import { withMermaid } from "vitepress-plugin-mermaid";
 import { configureDiagramsPlugin } from "vitepress-plugin-diagrams";
-import { withSidebar } from "vitepress-sidebar";
 import { generateSidebar } from "vitepress-sidebar";
-import darcula from "./theme/darcula-theme.json";
+
+// ============================================================
+// 侧边栏配置
+// ============================================================
+
+/**
+ * 自动生成 redis 目录侧边栏
+ * 使用 vitepress-sidebar 插件自动扫描目录生成侧边栏配置
+ * 文档: https://github.com/tzking/vitepress-sidebar
+ */
+const redisSidebarConfig = generateSidebar([
+  {
+    documentRootPath: "/docs",
+    useTitleFromFileHeading: true, // 从文件的一级标题提取侧边栏标题
+    useFolderTitleFromIndexFile: true,
+    useFolderLinkFromIndexFile: true,
+    sortMenusOrderByDescending: false, // 按文件名升序排序
+    collapsed: false, // 默认展开
+    scanStartPath: "redis", // 扫描 docs/redis 目录
+    resolvePath: "/redis/", // 匹配 /redis/ 路径
+  },
+]);
+
+// ============================================================
+// VitePress 配置
+// ============================================================
 
 const vitePressConfig = {
-  base: "/cs-manual/", // 不能少, url定位
+  /**
+   * 站点基础路径
+   * 部署到子路径时必须设置，如 GitHub Pages 的项目站点
+   */
+  base: "/cs-manual/",
+
   title: "CS Manual",
   description: "Computer Science Manual",
-  lastUpdated: true,
+  lastUpdated: true, // 显示最后更新时间
+
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
-    // 顶导
+    // --------------------------------------------------------
+    // 顶部导航栏
+    // link 路径说明：
+    //   - 以 / 开头：相对于 docs 目录
+    //   - 不以 / 开头：相对于 base 路径
+    // activeMatch：用于高亮当前激活的导航项（支持正则）
+    // --------------------------------------------------------
     nav: [
       {
         text: "blog",
@@ -21,7 +56,7 @@ const vitePressConfig = {
       },
       {
         text: "静态站",
-        link: "static-web", // 单独md文件, 不配置侧边栏
+        link: "/static-web",
       },
       {
         text: "算法",
@@ -35,14 +70,21 @@ const vitePressConfig = {
       },
       {
         text: "Redis",
-        link: "/redis/redis", // 单独md文件, 不配置侧边栏
+        link: "/redis/redis",
+        activeMatch: "/redis/",
       },
       {
         text: "Tomcat",
-        link: "Tomcat",
+        link: "/Tomcat",
+        activeMatch: "/Tomcat",
       },
     ],
+
+    // --------------------------------------------------------
     // 侧边栏
+    // base：侧边栏的基础路径，link 会拼接 base
+    // collapsed：是否默认折叠
+    // --------------------------------------------------------
     sidebar: {
       "/blog/": {
         base: "/blog/",
@@ -74,7 +116,7 @@ const vitePressConfig = {
       },
 
       "/leetcode/": {
-        base: "/leetcode/new/", // 路径
+        base: "/leetcode/new/",
         items: [
           {
             text: "leetcode",
@@ -114,45 +156,61 @@ const vitePressConfig = {
               { text: "图形最大面积", link: "图形最大面积" },
               { text: "最长公共前缀", link: "最长公共前缀" },
               { text: "集合中的元素", link: "集合中的元素" },
-              {
-                text: "多步操作最优解",
-                link: "多步操作最优解",
-              },
+              { text: "多步操作最优解", link: "多步操作最优解" },
             ],
           },
         ],
       },
+
+      // 使用 vitepress-sidebar 自动生成的配置
+      "/redis/": (redisSidebarConfig as Record<string, unknown>)["/redis/"],
     },
+
+    // --------------------------------------------------------
+    // 其他主题配置
+    // --------------------------------------------------------
     outline: {
-      level: "deep",
+      level: "deep", // 显示深层标题大纲
     },
     socialLinks: [{ icon: "github", link: "https://github.com/duskbat" }],
     search: {
-      provider: "local",
+      provider: "local", // 本地搜索
     },
   },
-  // markdown
+
+  // --------------------------------------------------------
+  // Markdown 配置
+  // --------------------------------------------------------
   markdown: {
-    // shiki 支持自定义scheme, 可参考文档. 导入: import darcula from './theme/darcula.json'
+    /**
+     * 代码高亮主题
+     * 可选主题: https://shiki.style/gallery
+     */
     theme: {
       light: "github-light",
-      dark: "dark-plus", // darcula
+      dark: "dark-plus",
     },
-    math: true,
+    math: true, // 启用数学公式支持
     config: async (md) => {
+      /**
+       * 配置图表插件 (PlantUML, Graphviz 等)
+       * 通过 Kroki 服务器渲染图表为 SVG
+       * 文档: https://github.com/emersonbottero/vitepress-plugin-diagrams
+       */
       configureDiagramsPlugin(md, {
-        diagramsDir: "docs/public/diagrams", // 可选：自定义 SVG 文件目录
-        publicPath: "diagrams", // 可选：自定义公共路径
-        krokiServerUrl: "https://kroki.io", // 可选：自定义 Kroki 服务器地址
-        excludedDiagramTypes: ["mermaid"], // 可选：排除特定图表类型
+        diagramsDir: "docs/public/diagrams", // SVG 文件存储目录
+        publicPath: "/cs-manual/diagrams/", // SVG 访问路径（需包含 base）
+        krokiServerUrl: "https://kroki.io", // Kroki 渲染服务器
+        excludedDiagramTypes: ["mermaid"], // mermaid 由 vitepress-plugin-mermaid 处理
       });
     },
   },
-  // 插件
+
+  // Vite 配置（可扩展）
   vite: {
     plugins: [],
   },
 };
 
-// https://vitepress.dev/reference/site-config
+// 使用 withMermaid 包装以支持 Mermaid 图表
 export default withMermaid(vitePressConfig);
