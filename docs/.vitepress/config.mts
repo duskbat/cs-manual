@@ -8,20 +8,34 @@ import { generateSidebar } from "vitepress-sidebar";
 // ============================================================
 
 /**
- * 自动生成 redis 目录侧边栏
+ * 自动生成侧边栏配置
  * 使用 vitepress-sidebar 插件自动扫描目录生成侧边栏配置
  * 文档: https://github.com/tzking/vitepress-sidebar
  */
-const redisSidebarConfig = generateSidebar([
+const sidebarConfig = generateSidebar([
   {
     documentRootPath: "/docs",
     useTitleFromFileHeading: true, // 从文件的一级标题提取侧边栏标题
-    useFolderTitleFromIndexFile: true,
-    useFolderLinkFromIndexFile: true,
+    useFolderTitleFromIndexFile: true, // 使用目录下 index.md 的标题作为文件夹名称
+    useFolderLinkFromIndexFile: true, // 点击文件夹时跳转到目录下的 index.md
     sortMenusOrderByDescending: false, // 按文件名升序排序
     collapsed: false, // 默认展开
     scanStartPath: "redis", // 扫描 docs/redis 目录
     resolvePath: "/redis/", // 匹配 /redis/ 路径
+    rootGroupText: "Redis", // 侧边栏根目录标题
+    rootGroupCollapsed: false, // 根目录默认展开，可点击折叠
+  },
+  {
+    documentRootPath: "/docs",
+    useTitleFromFileHeading: true,
+    useFolderTitleFromIndexFile: true, // 使用目录下 index.md 的标题作为文件夹名称
+    useFolderLinkFromIndexFile: true, // 点击文件夹时跳转到目录下的 index.md
+    sortMenusOrderByDescending: false,
+    collapsed: false,
+    scanStartPath: "leetcode/new", // 扫描 docs/leetcode/new 目录
+    resolvePath: "/leetcode/new/", // 匹配 /leetcode/new/ 路径
+    rootGroupText: "leetcode", // 侧边栏根目录标题
+    rootGroupCollapsed: false, // 根目录默认展开，可点击折叠
   },
 ]);
 
@@ -29,7 +43,7 @@ const redisSidebarConfig = generateSidebar([
 // VitePress 配置
 // ============================================================
 
-const vitePressConfig = {
+const vitePressConfig = defineConfig({
   /**
    * 站点基础路径
    * 部署到子路径时必须设置，如 GitHub Pages 的项目站点
@@ -61,7 +75,7 @@ const vitePressConfig = {
       {
         text: "算法",
         link: "/leetcode/new/leetcode",
-        activeMatch: "/leetcode/",
+        activeMatch: "/leetcode/new/",
       },
       {
         text: "Java",
@@ -115,55 +129,18 @@ const vitePressConfig = {
         ],
       },
 
-      "/leetcode/": {
-        base: "/leetcode/new/",
-        items: [
-          {
-            text: "leetcode",
-            collapsed: false,
-            items: [
-              { text: "图", link: "图" },
-              { text: "栈", link: "栈" },
-              { text: "树", link: "树" },
-              { text: "区间", link: "区间" },
-              { text: "排序", link: "排序" },
-              { text: "搜索", link: "搜索" },
-              { text: "数组", link: "数组" },
-              { text: "数论", link: "数论" },
-              { text: "构造", link: "构造" },
-              { text: "柱子", link: "柱子" },
-              { text: "矩阵", link: "矩阵" },
-              { text: "组合", link: "组合" },
-              { text: "结构", link: "结构" },
-              { text: "链表", link: "链表" },
-              { text: "中位数", link: "中位数" },
-              { text: "位运算", link: "位运算" },
-              { text: "可达性", link: "可达性" },
-              { text: "多线程", link: "多线程" },
-              { text: "子序列", link: "子序列" },
-              { text: "字典序", link: "字典序" },
-              { text: "最大序", link: "最大序" },
-              { text: "前缀树Trie", link: "前缀树Trie" },
-              { text: "二分查找", link: "二分查找" },
-              { text: "拓扑排序", link: "拓扑排序" },
-              { text: "最长子串", link: "最长子串" },
-              { text: "下一个元素", link: "下一个元素" },
-              { text: "二分猜答案", link: "二分猜答案" },
-              { text: "多少种不同", link: "多少种不同" },
-              { text: "子数组子串", link: "子数组子串" },
-              { text: "字符串匹配", link: "字符串匹配" },
-              { text: "字符串编辑", link: "字符串编辑" },
-              { text: "图形最大面积", link: "图形最大面积" },
-              { text: "最长公共前缀", link: "最长公共前缀" },
-              { text: "集合中的元素", link: "集合中的元素" },
-              { text: "多步操作最优解", link: "多步操作最优解" },
-            ],
-          },
-        ],
+      // 使用 vitepress-sidebar 自动生成的配置
+      // generateSidebar 扫描 docs/leetcode/new 目录，自动生成 sidebar items
+      "/leetcode/new/": (sidebarConfig as Record<string, unknown>)["/leetcode/new/"] as {
+        base: string;
+        items: never[];
       },
 
-      // 使用 vitepress-sidebar 自动生成的配置
-      "/redis/": (redisSidebarConfig as Record<string, unknown>)["/redis/"],
+      // generateSidebar 扫描 docs/redis 目录
+      "/redis/": (sidebarConfig as Record<string, unknown>)["/redis/"] as {
+        base: string;
+        items: never[];
+      },
     },
 
     // --------------------------------------------------------
@@ -210,7 +187,7 @@ const vitePressConfig = {
   vite: {
     plugins: [],
   },
-};
+});
 
 // 使用 withMermaid 包装以支持 Mermaid 图表
 export default withMermaid(vitePressConfig);
