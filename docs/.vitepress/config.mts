@@ -2,6 +2,8 @@ import { defineConfig } from "vitepress";
 import { withMermaid } from "vitepress-plugin-mermaid";
 import { configureDiagramsPlugin } from "vitepress-plugin-diagrams";
 import { generateSidebar } from "vitepress-sidebar";
+import { DarkRaw as darculaTheme } from "jetbrains-ide-themes";
+
 
 // ============================================================
 // 侧边栏配置
@@ -162,6 +164,7 @@ const vitePressConfig = defineConfig({
     /**
      * 代码高亮主题
      * 可选主题: https://shiki.style/gallery
+     * darculaTheme: JetBrains IntelliJ IDEA Darcula 深色主题（手动加载）
      */
     theme: {
       light: "github-light",
