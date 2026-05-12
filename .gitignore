@@ -2,4 +2,5 @@ node_modules/*
 docs/.vitepress/cache
 docs/.vitepress/dist
 .idea/*
+.claude/*
 docs/public/diagrams
