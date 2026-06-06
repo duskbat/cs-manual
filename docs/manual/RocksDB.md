@@ -1,4 +1,4 @@
-# 持久化 KV 存储
+# RocksDB
 
 RocksDB 是一个 kv 型的存储引擎, Facebook 基于 Google 的 LevelDB 开发的
 
