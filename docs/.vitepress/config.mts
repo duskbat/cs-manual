@@ -81,8 +81,8 @@ const vitePressConfig = defineConfig({
       },
       {
         text: "Java",
-        link: "/java/java目录",
-        activeMatch: "/java/",
+        link: "/Java/java目录",
+        activeMatch: "/Java/",
       },
       {
         text: "Redis",
@@ -113,8 +113,8 @@ const vitePressConfig = defineConfig({
         ],
       },
 
-      "/java/": {
-        base: "/java/",
+      "/Java/": {
+        base: "/Java/",
         items: [
           {
             text: "Java",
