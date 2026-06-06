@@ -3,24 +3,24 @@
 layout: home
 
 hero:
-    name: "CS Manual"
-    text: "Computer Science"
-    tagline: 想学啊你, 我教你啊
-    actions:
-        - theme: brand
-          text: 算法
-          link: /manual/leetcode/new/leetcode
-        - theme: alt
-          text: Java
-          link: /manual/java/Java
+  name: "CS Manual"
+  text: "Computer Science"
+  tagline: 想学啊你, 我教你啊
+  actions:
+    - theme: brand
+      text: 算法
+      link: /manual/leetcode/new/leetcode
+    - theme: alt
+      text: Java
+      link: /manual/java/Java发展史
 
 features:
-    - title: Algorithm
-      details: leetcode, codeforces
-    - title: Java
-      details: JVM, Concurrent, APIs, Spring
-    - title: Store
-      details: Redis, MySQL
-    - title: Go
-      details: golang
+  - title: Algorithm
+    details: leetcode, codeforces
+  - title: Java
+    details: JVM, Concurrent, APIs, Spring
+  - title: Store
+    details: Redis, MySQL
+  - title: Go
+    details: golang
 ---

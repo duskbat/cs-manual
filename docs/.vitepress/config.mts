@@ -50,7 +50,7 @@ const sidebarConfig = generateSidebar([
     rootGroupText: "Blog",
     rootGroupCollapsed: false,
   },
-    {
+  {
     documentRootPath: "docs",
     useTitleFromFileHeading: true, // 从文件的一级标题提取侧边栏标题
     useFolderTitleFromIndexFile: true, // 使用目录下 index.md 的标题作为文件夹名称
@@ -104,7 +104,7 @@ const vitePressConfig = defineConfig({
       },
       {
         text: "Java",
-        link: "/manual/Java/Java",
+        link: "/manual/Java/Java发展史",
         activeMatch: "/manual/Java/",
       },
       {
