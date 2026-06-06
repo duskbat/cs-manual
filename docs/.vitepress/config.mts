@@ -4,7 +4,6 @@ import { configureDiagramsPlugin } from "vitepress-plugin-diagrams";
 import { generateSidebar } from "vitepress-sidebar";
 import { DarkRaw as darculaTheme } from "jetbrains-ide-themes";
 
-
 // ============================================================
 // 侧边栏配置
 // ============================================================
@@ -16,28 +15,40 @@ import { DarkRaw as darculaTheme } from "jetbrains-ide-themes";
  */
 const sidebarConfig = generateSidebar([
   {
-    documentRootPath: "/docs/manual",
+    documentRootPath: "docs",
     useTitleFromFileHeading: true, // 从文件的一级标题提取侧边栏标题
     useFolderTitleFromIndexFile: true, // 使用目录下 index.md 的标题作为文件夹名称
     useFolderLinkFromIndexFile: true, // 点击文件夹时跳转到目录下的 index.md
     sortMenusOrderByDescending: false, // 按文件名升序排序
     collapsed: false, // 默认展开
-    scanStartPath: "redis", // 扫描 docs/redis 目录
-    resolvePath: "/redis/", // 匹配 /redis/ 路径
+    scanStartPath: "manual/redis", // 扫描 docs/manual/redis 目录
+    resolvePath: "/manual/redis/", // 匹配 /manual/redis/ 路径
     rootGroupText: "Redis", // 侧边栏根目录标题
     rootGroupCollapsed: false, // 根目录默认展开，可点击折叠
   },
   {
-    documentRootPath: "/docs/manual",
+    documentRootPath: "docs",
     useTitleFromFileHeading: true,
-    useFolderTitleFromIndexFile: true, // 使用目录下 index.md 的标题作为文件夹名称
-    useFolderLinkFromIndexFile: true, // 点击文件夹时跳转到目录下的 index.md
+    useFolderTitleFromIndexFile: true,
+    useFolderLinkFromIndexFile: true,
     sortMenusOrderByDescending: false,
     collapsed: false,
-    scanStartPath: "leetcode/new", // 扫描 docs/leetcode/new 目录
-    resolvePath: "/leetcode/new/", // 匹配 /leetcode/new/ 路径
-    rootGroupText: "leetcode", // 侧边栏根目录标题
-    rootGroupCollapsed: false, // 根目录默认展开，可点击折叠
+    scanStartPath: "manual/leetcode/new", // 扫描 docs/manual/leetcode/new 目录
+    resolvePath: "/manual/leetcode/new/", // 匹配 /manual/leetcode/new/ 路径
+    rootGroupText: "leetcode",
+    rootGroupCollapsed: false,
+  },
+  {
+    documentRootPath: "docs",
+    useTitleFromFileHeading: true,
+    useFolderTitleFromIndexFile: true,
+    useFolderLinkFromIndexFile: true,
+    sortMenusOrderByDescending: false,
+    collapsed: false,
+    scanStartPath: "manual/blog",
+    resolvePath: "/manual/blog/",
+    rootGroupText: "Blog",
+    rootGroupCollapsed: false,
   },
 ]);
 
@@ -68,7 +79,7 @@ const vitePressConfig = defineConfig({
       {
         text: "blog",
         link: "/manual/blog/blog",
-        activeMatch: "/blog/",
+        activeMatch: "/manual/blog/",
       },
       {
         text: "静态站",
@@ -77,22 +88,22 @@ const vitePressConfig = defineConfig({
       {
         text: "算法",
         link: "/manual/leetcode/new/leetcode",
-        activeMatch: "/leetcode/new/",
+        activeMatch: "/manual/leetcode/new/",
       },
       {
         text: "Java",
         link: "/manual/Java/java目录",
-        activeMatch: "/Java/",
+        activeMatch: "/manual/Java/",
       },
       {
         text: "Redis",
         link: "/manual/redis/redis",
-        activeMatch: "/redis/",
+        activeMatch: "/manual/redis/",
       },
       {
         text: "Tomcat",
         link: "/manual/Tomcat",
-        activeMatch: "/Tomcat",
+        activeMatch: "/manual/Tomcat",
       },
     ],
 
@@ -102,19 +113,9 @@ const vitePressConfig = defineConfig({
     // collapsed：是否默认折叠
     // --------------------------------------------------------
     sidebar: {
-      "/blog/": {
-        base: "/blog/",
-        items: [
-          {
-            text: "blog",
-            collapsed: false,
-            items: [{ text: "生物vs计算机", link: "生物vs计算机" }],
-          },
-        ],
-      },
-
-      "/Java/": {
-        base: "/Java/",
+      ...sidebarConfig,
+      "/manual/Java/": {
+        base: "/manual/Java/",
         items: [
           {
             text: "Java",
@@ -129,19 +130,6 @@ const vitePressConfig = defineConfig({
             ],
           },
         ],
-      },
-
-      // 使用 vitepress-sidebar 自动生成的配置
-      // generateSidebar 扫描 docs/leetcode/new 目录，自动生成 sidebar items
-      "/leetcode/new/": (sidebarConfig as Record<string, unknown>)["/leetcode/new/"] as {
-        base: string;
-        items: never[];
-      },
-
-      // generateSidebar 扫描 docs/redis 目录
-      "/manual/redis/": (sidebarConfig as Record<string, unknown>)["/manual/redis/"] as {
-        base: string;
-        items: never[];
       },
     },
 
@@ -185,7 +173,6 @@ const vitePressConfig = defineConfig({
       });
     },
   },
-
 });
 
 // 使用 withMermaid 包装以支持 Mermaid 图表
