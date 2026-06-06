@@ -1,4 +1,4 @@
-# java 发展史
+# Java 发展史
 
 ```mermaid
 timeline
