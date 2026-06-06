@@ -16,7 +16,7 @@ import { DarkRaw as darculaTheme } from "jetbrains-ide-themes";
  */
 const sidebarConfig = generateSidebar([
   {
-    documentRootPath: "/docs",
+    documentRootPath: "/docs/manual",
     useTitleFromFileHeading: true, // 从文件的一级标题提取侧边栏标题
     useFolderTitleFromIndexFile: true, // 使用目录下 index.md 的标题作为文件夹名称
     useFolderLinkFromIndexFile: true, // 点击文件夹时跳转到目录下的 index.md
@@ -28,7 +28,7 @@ const sidebarConfig = generateSidebar([
     rootGroupCollapsed: false, // 根目录默认展开，可点击折叠
   },
   {
-    documentRootPath: "/docs",
+    documentRootPath: "/docs/manual",
     useTitleFromFileHeading: true,
     useFolderTitleFromIndexFile: true, // 使用目录下 index.md 的标题作为文件夹名称
     useFolderLinkFromIndexFile: true, // 点击文件夹时跳转到目录下的 index.md
@@ -67,31 +67,31 @@ const vitePressConfig = defineConfig({
     nav: [
       {
         text: "blog",
-        link: "/blog/blog",
+        link: "/manual/blog/blog",
         activeMatch: "/blog/",
       },
       {
         text: "静态站",
-        link: "/static-web",
+        link: "/manual/static-web",
       },
       {
         text: "算法",
-        link: "/leetcode/new/leetcode",
+        link: "/manual/leetcode/new/leetcode",
         activeMatch: "/leetcode/new/",
       },
       {
         text: "Java",
-        link: "/Java/java目录",
+        link: "/manual/Java/java目录",
         activeMatch: "/Java/",
       },
       {
         text: "Redis",
-        link: "/redis/redis",
+        link: "/manual/redis/redis",
         activeMatch: "/redis/",
       },
       {
         text: "Tomcat",
-        link: "/Tomcat",
+        link: "/manual/Tomcat",
         activeMatch: "/Tomcat",
       },
     ],
@@ -139,7 +139,7 @@ const vitePressConfig = defineConfig({
       },
 
       // generateSidebar 扫描 docs/redis 目录
-      "/redis/": (sidebarConfig as Record<string, unknown>)["/redis/"] as {
+      "/manual/redis/": (sidebarConfig as Record<string, unknown>)["/manual/redis/"] as {
         base: string;
         items: never[];
       },

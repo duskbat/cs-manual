@@ -9,10 +9,10 @@ hero:
     actions:
         - theme: brand
           text: 算法
-          link: /leetcode/new/leetcode
+          link: /manual/leetcode/new/leetcode
         - theme: alt
           text: Java
-          link: /java/java目录
+          link: /manual/java/java目录
 
 features:
     - title: Algorithm
