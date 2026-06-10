@@ -31,3 +31,9 @@ git checkout tags/tag-oe-978-20240806140326394 -b tg
 # 增大缓冲区
 git config http.postBuffer 524288000
 ```
+
+#### 区分大小写
+
+```sh
+git config core.ignorecase false
+```
