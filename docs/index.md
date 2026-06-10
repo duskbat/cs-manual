@@ -12,7 +12,7 @@ hero:
       link: /manual/leetcode/new/leetcode
     - theme: alt
       text: Java
-      link: /manual/java/Java发展史
+      link: /manual/Java/Java发展史
 
 features:
   - title: Algorithm
