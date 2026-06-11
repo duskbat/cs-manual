@@ -36,4 +36,6 @@ git config http.postBuffer 524288000
 
 ```sh
 git config core.ignorecase false
+# 在大小写敏感的方式下显式删除小写版本
+git rm --cached "docs/manual/Java/java发展史.md"
 ```
