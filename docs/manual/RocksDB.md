@@ -14,8 +14,10 @@ memtable, sstfile, logfile
 
 - memtable
   内存中的结构, sorted tree
+
 - sstfile(Sorted String Table)
   一层一层的, 默认格式是 BlockBasedTable
+
 - logfile
   sequentially-written 文件
 
