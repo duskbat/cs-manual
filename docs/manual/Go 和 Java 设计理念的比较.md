@@ -119,6 +119,8 @@
 > 而 Go 语言并不是严格意义上的面向对象语言，Go 语言吸收了很多函数式编程的思想，允许函数作为参数和返回值、函数闭包等，所以操作的最小单位可以是多种类型，包括结构体、函数、自定义类型等等。
 
 ```go
+package main
+
 type Handler interface {
     ServeHTTP(ResponseWriter, *Request)
 }
