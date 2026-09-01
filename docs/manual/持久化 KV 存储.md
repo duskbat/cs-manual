@@ -1,7 +1,8 @@
 # 持久化 KV 存储
 
-https://i.xiaojukeji.com/way/article/13945524?lang=zh-CN
-https://cooper.didichuxing.com/docs2/document/2203147641529
+[fusion架构升级之路](https://i.xiaojukeji.com/way/article/13945524?lang=zh-CN)
+[kvrocks调研](https://cooper.didichuxing.com/docs2/document/2203169831464)
+[fusion演进思路](https://cooper.didichuxing.com/docs2/document/2203147641529)
 
 ## 业界调研
 
