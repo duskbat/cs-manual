@@ -99,6 +99,12 @@ const vitePressConfig = defineConfig({
    */
   base: "/cs-manual/",
 
+  /**
+   * 源文件目录
+   * .vitepress 位于仓库根目录时，用 srcDir 指回文档目录
+   */
+  srcDir: "docs",
+
   title: "CS Manual",
   description: "Computer Science Manual",
   lastUpdated: true, // 显示最后更新时间
