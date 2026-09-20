@@ -74,6 +74,18 @@ const sidebarConfig = generateSidebar([
     rootGroupText: "MySQL", // 侧边栏根目录标题
     rootGroupCollapsed: false, // 根目录默认展开，可点击折叠
   },
+  {
+    documentRootPath: "docs",
+    useTitleFromFileHeading: true, // 从文件的一级标题提取侧边栏标题
+    useFolderTitleFromIndexFile: true, // 使用目录下 index.md 的标题作为文件夹名称
+    useFolderLinkFromIndexFile: true, // 点击文件夹时跳转到目录下的 index.md
+    sortMenusOrderByDescending: false, // 按文件名升序排序
+    collapsed: false, // 默认展开
+    scanStartPath: "manual/static-site", // 扫描 docs/manual/static-site 目录
+    resolvePath: "/manual/static-site/", // 匹配 /manual/static-site/ 路径
+    rootGroupText: "静态站", // 侧边栏根目录标题
+    rootGroupCollapsed: false, // 根目录默认展开，可点击折叠
+  },
 ]);
 
 // ============================================================
@@ -107,7 +119,8 @@ const vitePressConfig = defineConfig({
       },
       {
         text: "静态站",
-        link: "/manual/static-web",
+        link: "/manual/static-site/syntax-highlight-overview",
+        activeMatch: "/manual/static-site/",
       },
       {
         text: "算法",
