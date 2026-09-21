@@ -5,88 +5,48 @@ import { generateSidebar } from "vitepress-sidebar";
 import { DarkRaw as darculaTheme } from "jetbrains-ide-themes";
 
 // ============================================================
-// 侧边栏配置
+// 侧边栏 & 顶部导航
 // ============================================================
 
 /**
  * 自动生成侧边栏配置
- * 使用 vitepress-sidebar 插件自动扫描目录生成侧边栏配置
- * 文档: https://github.com/tzking/vitepress-sidebar
+ * 使用 vitepress-sidebar 插件自动扫描目录生成，各板块共享同一套扫描规则
+ * 文档: https://vitepress-sidebar.cdget.com
  */
-const sidebarConfig = generateSidebar([
-  {
+
+/** 板块定义：dir 为 docs 下的扫描目录，title 为侧边栏根标题 */
+const sections = [
+  { dir: "manual/redis", title: "Redis" },
+  { dir: "manual/leetcode/new", title: "leetcode" },
+  { dir: "manual/blog", title: "Blog" },
+  { dir: "manual/Java", title: "Java" },
+  { dir: "manual/MySQL", title: "MySQL" },
+  { dir: "manual/static-site", title: "静态站" },
+];
+
+const sidebar = generateSidebar(
+  sections.map(({ dir, title }) => ({
     documentRootPath: "docs",
-    useTitleFromFileHeading: true, // 从文件的一级标题提取侧边栏标题
-    useFolderTitleFromIndexFile: true, // 使用目录下 index.md 的标题作为文件夹名称
+    useTitleFromFileHeading: true, // 标题取自文件的一级标题
+    useFolderTitleFromIndexFile: true, // 文件夹名取自目录下 index.md 的标题
     useFolderLinkFromIndexFile: true, // 点击文件夹时跳转到目录下的 index.md
-    sortMenusOrderByDescending: false, // 按文件名升序排序
     collapsed: false, // 默认展开
-    scanStartPath: "manual/redis", // 扫描 docs/manual/redis 目录
-    resolvePath: "/manual/redis/", // 匹配 /manual/redis/ 路径
-    rootGroupText: "Redis", // 侧边栏根目录标题
+    scanStartPath: dir, // 扫描 docs/<dir>
+    resolvePath: `/${dir}/`, // 匹配 /<dir>/ 开头的路由
+    rootGroupText: title,
     rootGroupCollapsed: false, // 根目录默认展开，可点击折叠
-  },
-  {
-    documentRootPath: "docs",
-    useTitleFromFileHeading: true,
-    useFolderTitleFromIndexFile: true,
-    useFolderLinkFromIndexFile: true,
-    sortMenusOrderByDescending: false,
-    collapsed: false,
-    scanStartPath: "manual/leetcode/new", // 扫描 docs/manual/leetcode/new 目录
-    resolvePath: "/manual/leetcode/new/", // 匹配 /manual/leetcode/new/ 路径
-    rootGroupText: "leetcode",
-    rootGroupCollapsed: false,
-  },
-  {
-    documentRootPath: "docs",
-    useTitleFromFileHeading: true,
-    useFolderTitleFromIndexFile: true,
-    useFolderLinkFromIndexFile: true,
-    sortMenusOrderByDescending: false,
-    collapsed: false,
-    scanStartPath: "manual/blog",
-    resolvePath: "/manual/blog/",
-    rootGroupText: "Blog",
-    rootGroupCollapsed: false,
-  },
-  {
-    documentRootPath: "docs",
-    useTitleFromFileHeading: true, // 从文件的一级标题提取侧边栏标题
-    useFolderTitleFromIndexFile: true, // 使用目录下 index.md 的标题作为文件夹名称
-    useFolderLinkFromIndexFile: true, // 点击文件夹时跳转到目录下的 index.md
-    sortMenusOrderByDescending: false, // 按文件名升序排序
-    collapsed: false, // 默认展开
-    scanStartPath: "manual/Java", // 扫描 docs/manual/redis 目录
-    resolvePath: "/manual/Java/", // 匹配 /manual/redis/ 路径
-    rootGroupText: "Java", // 侧边栏根目录标题
-    rootGroupCollapsed: false, // 根目录默认展开，可点击折叠
-  },
-  {
-    documentRootPath: "docs",
-    useTitleFromFileHeading: true, // 从文件的一级标题提取侧边栏标题
-    useFolderTitleFromIndexFile: true, // 使用目录下 index.md 的标题作为文件夹名称
-    useFolderLinkFromIndexFile: true, // 点击文件夹时跳转到目录下的 index.md
-    sortMenusOrderByDescending: false, // 按文件名升序排序
-    collapsed: false, // 默认展开
-    scanStartPath: "manual/MySQL", // 扫描 docs/manual/MySQL 目录
-    resolvePath: "/manual/MySQL/", // 匹配 /manual/MySQL/ 路径
-    rootGroupText: "MySQL", // 侧边栏根目录标题
-    rootGroupCollapsed: false, // 根目录默认展开，可点击折叠
-  },
-  {
-    documentRootPath: "docs",
-    useTitleFromFileHeading: true, // 从文件的一级标题提取侧边栏标题
-    useFolderTitleFromIndexFile: true, // 使用目录下 index.md 的标题作为文件夹名称
-    useFolderLinkFromIndexFile: true, // 点击文件夹时跳转到目录下的 index.md
-    sortMenusOrderByDescending: false, // 按文件名升序排序
-    collapsed: false, // 默认展开
-    scanStartPath: "manual/static-site", // 扫描 docs/manual/static-site 目录
-    resolvePath: "/manual/static-site/", // 匹配 /manual/static-site/ 路径
-    rootGroupText: "静态站", // 侧边栏根目录标题
-    rootGroupCollapsed: false, // 根目录默认展开，可点击折叠
-  },
-]);
+  })),
+);
+
+/**
+ * 顶导项：activeMatch 省略时取 link 所在目录（尾随 /），
+ * 板块内任一页面都保持高亮；单文件入口需显式传入自身路径
+ */
+const navItem = (text: string, link: string, activeMatch?: string) => ({
+  text,
+  link,
+  activeMatch: activeMatch ?? link.slice(0, link.lastIndexOf("/") + 1),
+});
 
 // ============================================================
 // VitePress 配置
@@ -112,75 +72,19 @@ const vitePressConfig = defineConfig({
   themeConfig: {
     // --------------------------------------------------------
     // 顶部导航栏
-    // link 路径说明：
-    //   - 以 / 开头：相对于 docs 目录
-    //   - 不以 / 开头：相对于 base 路径
-    // activeMatch：用于高亮当前激活的导航项（支持正则）
+    // link 以 / 开头：相对于 docs 目录
     // --------------------------------------------------------
     nav: [
-      {
-        text: "blog",
-        link: "/manual/blog/blog",
-        activeMatch: "/manual/blog/",
-      },
-      {
-        text: "静态站",
-        link: "/manual/static-site/syntax-highlight-overview",
-        activeMatch: "/manual/static-site/",
-      },
-      {
-        text: "算法",
-        link: "/manual/leetcode/new/leetcode",
-        activeMatch: "/manual/leetcode/new/",
-      },
-      {
-        text: "Java",
-        link: "/manual/Java/Java发展史",
-        activeMatch: "/manual/Java/",
-      },
-      {
-        text: "Redis",
-        link: "/manual/redis/redis-mindmap",
-        activeMatch: "/manual/redis/",
-      },
-      {
-        text: "MySQL",
-        link: "/manual/MySQL/MySQL-mindmap",
-        activeMatch: "/manual/MySQL/",
-      },
-      {
-        text: "Tomcat",
-        link: "/manual/Tomcat",
-        activeMatch: "/manual/Tomcat",
-      },
+      navItem("blog", "/manual/blog/blog"),
+      navItem("静态站", "/manual/static-site/syntax-highlight-overview"),
+      navItem("算法", "/manual/leetcode/new/leetcode"),
+      navItem("Java", "/manual/Java/Java发展史"),
+      navItem("Redis", "/manual/redis/redis-mindmap"),
+      navItem("MySQL", "/manual/MySQL/MySQL-mindmap"),
+      navItem("Tomcat", "/manual/Tomcat", "/manual/Tomcat"),
     ],
 
-    // --------------------------------------------------------
-    // 侧边栏
-    // base：侧边栏的基础路径，link 会拼接 base
-    // collapsed：是否默认折叠
-    // --------------------------------------------------------
-    sidebar: {
-      ...sidebarConfig,
-      /*
-      "/manual/Java/": {
-        base: "/manual/Java/",
-        items: [
-          {
-            text: "Java",
-            collapsed: false,
-            items: [
-              { text: "JDK下载", link: "JDK下载" },
-              { text: "java发展史", link: "java发展史" },
-              { text: "HashMap", link: "HashMap" },
-              { text: "Map-api", link: "Map-API" },
-              { text: "并发", link: "并发" },
-              { text: "JVM", link: "JVM" },
-            ],
-          },
-        ],
-      },*/
-    },
+    sidebar,
 
     // --------------------------------------------------------
     // 其他主题配置
