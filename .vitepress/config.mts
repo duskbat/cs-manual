@@ -4,15 +4,7 @@ import { configureDiagramsPlugin } from "vitepress-plugin-diagrams";
 import { generateSidebar } from "vitepress-sidebar";
 import { DarkRaw as darculaTheme } from "jetbrains-ide-themes";
 
-// ============================================================
-// 侧边栏 & 顶部导航
-// ============================================================
-
-/**
- * 自动生成侧边栏配置
- * 使用 vitepress-sidebar 插件自动扫描目录生成，各板块共享同一套扫描规则
- * 文档: https://vitepress-sidebar.cdget.com
- */
+// ---------- 侧边栏 & 顶部导航 ----------
 
 /** 板块定义：dir 为 docs 下的扫描目录，title 为侧边栏根标题 */
 const sections = [
@@ -24,6 +16,7 @@ const sections = [
   { dir: "manual/static-site", title: "静态站" },
 ];
 
+/** 侧边栏：由 vitepress-sidebar 扫描目录生成（文档: https://vitepress-sidebar.cdget.com） */
 const sidebar = generateSidebar(
   sections.map(({ dir, title }) => ({
     documentRootPath: "docs",
@@ -35,7 +28,7 @@ const sidebar = generateSidebar(
     resolvePath: `/${dir}/`, // 匹配 /<dir>/ 开头的路由
     rootGroupText: title,
     rootGroupCollapsed: false, // 根目录默认展开，可点击折叠
-  })),
+  }))
 );
 
 /**
@@ -48,32 +41,18 @@ const navItem = (text: string, link: string, activeMatch?: string) => ({
   activeMatch: activeMatch ?? link.slice(0, link.lastIndexOf("/") + 1),
 });
 
-// ============================================================
-// VitePress 配置
-// ============================================================
+// ---------- VitePress 配置 ----------
 
 const vitePressConfig = defineConfig({
-  /**
-   * 站点基础路径
-   * 部署到子路径时必须设置，如 GitHub Pages 的项目站点
-   */
-  base: "/cs-manual/",
-
-  /**
-   * 源文件目录
-   * .vitepress 位于仓库根目录时，用 srcDir 指回文档目录
-   */
-  srcDir: "docs",
+  base: "/cs-manual/", // 部署到子路径（GitHub Pages 项目站点）
+  srcDir: "docs", // 文档源码目录
 
   title: "CS Manual",
   description: "Computer Science Manual",
-  lastUpdated: true, // 显示最后更新时间
+  lastUpdated: true, // 页面显示最后更新时间
 
   themeConfig: {
-    // --------------------------------------------------------
-    // 顶部导航栏
-    // link 以 / 开头：相对于 docs 目录
-    // --------------------------------------------------------
+    // link 以 / 开头，对应 docs/ 下的页面路径
     nav: [
       navItem("blog", "/manual/blog/blog"),
       navItem("静态站", "/manual/static-site/syntax-highlight-overview"),
@@ -86,11 +65,8 @@ const vitePressConfig = defineConfig({
 
     sidebar,
 
-    // --------------------------------------------------------
-    // 其他主题配置
-    // --------------------------------------------------------
     outline: {
-      level: "deep", // 显示深层标题大纲
+      level: "deep", // 大纲显示深层标题
     },
     socialLinks: [{ icon: "github", link: "https://github.com/duskbat" }],
     search: {
@@ -98,35 +74,25 @@ const vitePressConfig = defineConfig({
     },
   },
 
-  // --------------------------------------------------------
-  // Markdown 配置
-  // --------------------------------------------------------
   markdown: {
-    /**
-     * 代码高亮主题
-     * 可选主题: https://shiki.style/gallery
-     * darculaTheme: JetBrains IntelliJ IDEA Darcula 深色主题（手动加载）
-     */
+    // 代码高亮主题，可选主题见 https://shiki.style/gallery
+    // darculaTheme 为手动加载的 Darcula 主题，当前未使用
     theme: {
       light: "github-light",
       dark: "dark-plus",
     },
-    math: true, // 启用数学公式支持
+    math: true, // 数学公式支持
     config: async (md) => {
-      /**
-       * 配置图表插件 (PlantUML, Graphviz 等)
-       * 通过 Kroki 服务器渲染图表为 SVG
-       * 文档: https://github.com/emersonbottero/vitepress-plugin-diagrams
-       */
+      // 通过 Kroki 服务器渲染 PlantUML/Graphviz 等图表为 SVG
       configureDiagramsPlugin(md, {
         diagramsDir: "docs/public/diagrams", // SVG 文件存储目录
         publicPath: "/cs-manual/diagrams/", // SVG 访问路径（需包含 base）
-        krokiServerUrl: "https://kroki.io", // Kroki 渲染服务器
+        krokiServerUrl: "https://kroki.io",
         excludedDiagramTypes: ["mermaid"], // mermaid 由 vitepress-plugin-mermaid 处理
       });
     },
   },
 });
 
-// 使用 withMermaid 包装以支持 Mermaid 图表
+// withMermaid 包装以支持 Mermaid 图表
 export default withMermaid(vitePressConfig);
